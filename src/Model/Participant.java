@@ -1,7 +1,9 @@
 package Model;
 
 import javax.persistence.*;
+
 import java.io.*;
+import java.util.Set;
 
 
 /**
@@ -28,6 +30,12 @@ public class Participant implements Serializable {
   
   @Column(name = "role")
   private int role;
+  
+  @ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name="project_participants", 
+	   joinColumns = @JoinColumn(name="participant_id"),
+	   inverseJoinColumns = @JoinColumn(name="project_id"))
+	private Set<Project> projects;
 
    // return number of columns in the table
    public int getNumberOfColumns() {
