@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
-  <data-source source="LOCAL" name="MySQL - frugal_innovation_lab@localhost" uuid="9dc6ec5a-33b7-4266-9570-68efbd3d15f4">
+  <data-source source="LOCAL" name="MySQL - projectDB@localhost" uuid="9dc6ec5a-33b7-4266-9570-68efbd3d15f4">
     <database-info product="MySQL" version="5.6.17" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.30 ( Revision: alexander.soklakov@oracle.com-20140310090514-8xt1yoht5ksg2e7c )">
       <extra-name-characters>#@</extra-name-characters>
       <identifier-quote-string>`</identifier-quote-string>
@@ -10,6 +10,7 @@
     <schema name="" catalog="information_schema"/>
     <schema name="" catalog="mysql"/>
     <schema name="" catalog="performance_schema"/>
+    <schema name="" catalog="projectdb"/>
     <schema name="" catalog="test"/>
     <schema name="" catalog="test_db"/>
     <table name="CHARACTER_SETS" schema="" catalog="information_schema" type="SYSTEM VIEW">
@@ -1973,6 +1974,83 @@
       <column name="CURRENT_CONNECTIONS" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="TOTAL_CONNECTIONS" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
     </table>
+    <table name="category" schema="" catalog="projectdb" type="TABLE">
+      <column name="category_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="category_name" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="category_id"/>
+      <exported-key name="category_fk" table="project_category" schema="" catalog="projectdb" columns="category_id"/>
+    </table>
+    <table name="file" schema="" catalog="projectdb" type="TABLE">
+      <column name="file_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="file_path" sqlType="VARCHAR" precision="250" scale="0" nullable="false" jdbcType="12"/>
+      <column name="file_name" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="file_type" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="project_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="project_id,file_id"/>
+      <foreign-key name="project_file_fk" columns="project_id" ref-table="project" ref-schema="" ref-catalog="projectdb" ref-columns="project_id" update-rule="3" delete-rule="3" deferrability="2"/>
+    </table>
+    <table name="login" schema="" catalog="projectdb" type="TABLE">
+      <column name="userame" sqlType="VARCHAR" precision="15" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="userame"/>
+    </table>
+    <table name="participant" schema="" catalog="projectdb" type="TABLE">
+      <column name="particpant_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="role" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="first_name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="last_name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="participant_photo_url" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="particpant_id"/>
+      <exported-key name="participant_fk" table="project_participants" schema="" catalog="projectdb" columns="participant_id"/>
+    </table>
+    <table name="participant_role" schema="" catalog="projectdb" type="TABLE">
+      <column name="participant_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="role_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="participant_id,role_id"/>
+      <foreign-key name="participant_r_fk" columns="participant_id" ref-table="project" ref-schema="" ref-catalog="projectdb" ref-columns="project_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="role_fk" columns="role_id" ref-table="role" ref-schema="" ref-catalog="projectdb" ref-columns="role_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="role_fk_idx" unique="false" columns="role_id"/>
+    </table>
+    <table name="project" schema="" catalog="projectdb" type="TABLE">
+      <column name="project_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="outcome" sqlType="VARCHAR" precision="750" scale="0" nullable="true" jdbcType="12"/>
+      <column name="status" sqlType="VARCHAR" precision="15" scale="0" nullable="false" jdbcType="12"/>
+      <column name="state" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="country" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <column name="street_address" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="zip" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="start_date" sqlType="DATE" precision="10" scale="0" nullable="false" jdbcType="91"/>
+      <column name="end_date" sqlType="DATE" precision="10" scale="0" nullable="false" jdbcType="91"/>
+      <column name="creation_Date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="project_id"/>
+      <exported-key name="project_file_fk" table="file" schema="" catalog="projectdb" columns="project_id"/>
+      <exported-key name="participant_r_fk" table="participant_role" schema="" catalog="projectdb" columns="participant_id"/>
+      <exported-key name="project_c_fk" table="project_category" schema="" catalog="projectdb" columns="project_id"/>
+      <exported-key name="project_p_fk" table="project_participants" schema="" catalog="projectdb" columns="project_id"/>
+    </table>
+    <table name="project_category" schema="" catalog="projectdb" type="TABLE">
+      <column name="project_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="category_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="project_id,category_id"/>
+      <foreign-key name="project_c_fk" columns="project_id" ref-table="project" ref-schema="" ref-catalog="projectdb" ref-columns="project_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="category_fk" columns="category_id" ref-table="category" ref-schema="" ref-catalog="projectdb" ref-columns="category_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="category_fk_idx" unique="false" columns="category_id"/>
+    </table>
+    <table name="project_participants" schema="" catalog="projectdb" type="TABLE">
+      <column name="project_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="participant_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="project_id,participant_id"/>
+      <foreign-key name="participant_fk" columns="participant_id" ref-table="participant" ref-schema="" ref-catalog="projectdb" ref-columns="particpant_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="project_p_fk" columns="project_id" ref-table="project" ref-schema="" ref-catalog="projectdb" ref-columns="project_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="participant_fk_idx" unique="false" columns="participant_id"/>
+    </table>
+    <table name="role" schema="" catalog="projectdb" type="TABLE">
+      <column name="role_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="role_name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="role_id"/>
+      <exported-key name="role_fk" table="participant_role" schema="" catalog="projectdb" columns="role_id"/>
+    </table>
     <table name="courselist" schema="" catalog="test" type="TABLE">
       <column name="course_name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
       <column name="course_number" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
@@ -2000,6 +2078,14 @@
       <column name="project_location" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="project_id"/>
       <index name="project_id_UNIQUE" unique="true" columns="project_id"/>
+    </table>
+    <table name="studentrecord" schema="" catalog="test" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="first_name" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="last_name" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="dept_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
     </table>
   </data-source>
 </component>
