@@ -1,19 +1,18 @@
 package Model;
 
+import Service.ParticipantService;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.swing.table.*;
 import javax.swing.table.AbstractTableModel;
-import java.lang.*;
 import java.lang.Class;
 import java.lang.Exception;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.util.*;
 import java.util.Comparator;
 import java.util.List;
 
@@ -22,7 +21,7 @@ import java.util.List;
  * Created by Rick Sullivan on 5/27/2014.
  * COEN 160 Labs 7 and 8
  *
- * Uses the Model.ParticipantService to make changes to the participant
+ * Uses the Service.ParticipantService to make changes to the participant
  * table model.
  * Modified from R. Grover's CourseListTableModel.
  */

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="3610766566">
-    <data-source source="LOCAL" name="MySQL - frugal_innovation_lab@localhost" uuid="9dc6ec5a-33b7-4266-9570-68efbd3d15f4">
+  <component name="DataSourceManagerImpl" format="xml" hash="2914045552">
+    <data-source source="LOCAL" name="MySQL - projectDB@localhost" uuid="9dc6ec5a-33b7-4266-9570-68efbd3d15f4">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/frugal_innovation_lab</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/projectDB</jdbc-url>
       <user-name>test</user-name>
       <user-password>df9bdf98df99df9e</user-password>
       <driver-properties>

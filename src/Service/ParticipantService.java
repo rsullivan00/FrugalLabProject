@@ -1,4 +1,6 @@
-package Model;
+package Service;
+
+import Model.Participant;
 
 import javax.persistence.*;
 import javax.persistence.EntityManager;
@@ -8,11 +10,11 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Model.ParticipantService.java
+ * Service.ParticipantService.java
  * Created by Rick Sullivan on 5/27/2014.
  * COEN 160 Labs 7 and 8
  *
- * The Model.ParticipantService manages changes to the participant table using the JPA.
+ * The Service.ParticipantService manages changes to the participant table using the JPA.
  * Modified from R. Grover's CourseListService.
  */
 public class ParticipantService {
