@@ -8,5 +8,6 @@
 	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/appframework-1.0.3.jar"/>
 	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/swing-layout-1.0.3.jar"/>
 	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/beansbinding-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/javax.persistence.jar"/>
 	<classpathentry kind="output" path="out/production/FrugalLabProject"/>
 </classpath>
