@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,7 +57,7 @@ public class Login implements Serializable {
 
     @Override
     public String toString() {
-        return "Model.Login{" +
+        return "model.Login{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';

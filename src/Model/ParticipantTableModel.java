@@ -1,6 +1,6 @@
-package Model;
+package model;
 
-import Service.ParticipantService;
+import service.ParticipantService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,11 +17,11 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Model.ParticipantTableModel.java
+ * model.ParticipantTableModel.java
  * Created by Rick Sullivan on 5/27/2014.
  * COEN 160 Labs 7 and 8
  *
- * Uses the Service.ParticipantService to make changes to the participant
+ * Uses the service.ParticipantService to make changes to the participant
  * table model.
  * Modified from R. Grover's CourseListTableModel.
  */

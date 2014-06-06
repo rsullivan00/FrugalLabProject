@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import javax.persistence.*;
 
@@ -7,19 +7,18 @@ import java.util.Set;
 
 
 /**
- * Model.Participant.java
+ * model.Participant.java
  * Created by Rick Sullivan on 5/27/2014.
- * COEN 160 Labs 7 and 8
  *
  * Entity class for participants in projects.
  * Corresponds to the participant table
- * Modified from R. Grover's CourseList.
  */
 @Entity(name = "participant")
 public class Participant implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.TABLE)
+  @Column(name = "participant_id")
   private int id;
   
   @Column(name = "first_name")
@@ -30,6 +29,9 @@ public class Participant implements Serializable {
   
   @Column(name = "role")
   private int role;
+
+  @Column(name = "participant_photo_url")
+  private String photoURL;
   
   @ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name="project_participants", 
@@ -67,6 +69,8 @@ public class Participant implements Serializable {
 		   colName = "last_name";
 	   else if (i == 3)
 		   colName = "role";
+       else if (i == 4)
+           colName = "participant_photo_url";
 	   else
 		   throw new Exception("Access to invalid column number in participants table");
 	   
@@ -83,6 +87,8 @@ public class Participant implements Serializable {
 		   lastName =  (String) value;
 	   else if (i == 3)
 		   role = Integer.parseInt((String) value);
+       else if (i == 4)
+           photoURL = (String) value;
 	   else
 		   throw new Exception("Error: invalid column index in participants table");
    }
@@ -94,6 +100,8 @@ public class Participant implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", role=" + role +
+                ", photoURL='" + photoURL + '\'' +
+                ", projects=" + projects +
                 '}';
     }
 
@@ -126,6 +134,23 @@ public class Participant implements Serializable {
     }
 
     public void setRole(int participant_role) {
+
         this.role = participant_role;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
     }
 }
