@@ -10,7 +10,6 @@ public class LoginService {
 	private EntityManager manager;
 
 	public LoginService(EntityManager manager) {
-		super();
 		this.manager = manager;
 	}
 	

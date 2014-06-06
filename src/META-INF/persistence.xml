@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
-  <persistence-unit name="NewPersistenceUnit">
+  <persistence-unit name="PersistenceUnit" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <properties>
-      <property name="eclipselink.jdbc.url" value=""/>
-      <property name="eclipselink.jdbc.driver" value=""/>
-      <property name="eclipselink.jdbc.user" value=""/>
-      <property name="eclipselink.jdbc.password" value=""/>
-    </properties>
-  </persistence-unit>
-  <persistence-unit name="projectDB?zeroDateTimeBehavior=convertToNullPU" transaction-type="RESOURCE_LOCAL">
-    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>view.Participant</class>
+    <class>model.Participant</class>
+    <class>model.Project</class>
+    <class>model.Login</class>
     <properties>
       <property name="eclipselink.jdbc.url" value="jdbc:mysql://localhost:3306/projectDB?zeroDateTimeBehavior=convertToNull"/>
       <property name="eclipselink.jdbc.user" value="test"/>

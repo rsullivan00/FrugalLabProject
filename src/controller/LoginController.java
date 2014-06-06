@@ -16,7 +16,7 @@ public class LoginController {
 	private LoginService loginService;
 	
 	public LoginController() {
-		this.entityManagerFactory = Persistence.createEntityManagerFactory("PersistenceUnit");;
+		this.entityManagerFactory = Persistence.createEntityManagerFactory("PersistenceUnit");
 		this.entityManager = entityManagerFactory.createEntityManager();
 		this.loginService = new LoginService(entityManager);
 	}

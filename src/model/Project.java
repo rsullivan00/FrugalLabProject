@@ -36,13 +36,16 @@ public class Project implements Serializable {
   
   @Column(name = "zip")
   private int zipCode;
-  
+
+  @Temporal(TemporalType.DATE)
   @Column(name = "start_date")
   private Date startDate;
-  
+
+  @Temporal(TemporalType.DATE)
   @Column(name = "end_date")
   private Date endDate;
-  
+
+  @Temporal(TemporalType.DATE)
   @Column(name = "creation_date")
   private Date creationDate;
   

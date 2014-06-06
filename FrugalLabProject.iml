@@ -7,6 +7,7 @@
         <setting name="provider-name" value="EclipseLink" />
         <datasource-mapping>
           <factory-entry name="NewPersistenceUnit" />
+          <factory-entry name="PersistenceUnit" value="02d50495-3c56-48d8-8f8b-1a7e3c2813db" />
           <factory-entry name="projectDB?zeroDateTimeBehavior=convertToNullPU" value="0ee2260c-de4a-4281-92e4-3090bba732c6" />
         </datasource-mapping>
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/META-INF/persistence.xml" />

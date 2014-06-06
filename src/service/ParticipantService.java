@@ -3,6 +3,7 @@ package service;
 import model.Participant;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import java.lang.String;
 import java.util.List;
@@ -16,22 +17,26 @@ import java.util.List;
  * Modified from R. Grover's CourseListService.
  */
 public class ParticipantService {
-	 private EntityManager manager;
-	 
-	 public ParticipantService(EntityManager manager) {
+	private EntityManager manager;
+
+	public ParticipantService(EntityManager manager) {
 		 this.manager = manager;
 	 }
 	 
     // method to create a new record
-     public Participant createParticipant(int id, String firstName, String lastName, int role) {
-    	Participant participant = new Participant();
- 	    participant.setId(id);
+    public Participant createParticipant(String firstName, String lastName, int role, String photoURL) {
+        EntityTransaction transaction = manager.getTransaction();
+        transaction.begin();
+        Participant participant = new Participant();
  	    participant.setFirstName(firstName);
  	    participant.setLastName(lastName);
  	    participant.setRole(role);
+        participant.setPhotoURL(photoURL);
  	    manager.persist(participant);
+
+        transaction.commit();
  	    return participant;
-     }
+    }
     
     // method to read a record
      public Participant readParticipant(int id) {
@@ -48,23 +53,30 @@ public class ParticipantService {
      }
      
     // method to update a record
-     public Participant updateParticipant(int id, String firstName, String lastName, int role) {
+     public Participant updateParticipant(int id, String firstName, String lastName, int role, String photoURL) {
+         EntityTransaction transaction = manager.getTransaction();
+         transaction.begin();
     	 Participant participant = manager.find(Participant.class, id);
     	 if (participant != null) {
     		 participant.setId(id);
     		 participant.setFirstName(firstName);
     		 participant.setLastName(lastName);
     		 participant.setRole(role);
+             participant.setPhotoURL(photoURL);
     	 }
+         transaction.commit();
     	 return participant;
      }
 
     // method to delete a record
     public void deleteParticipant(int id) {
-    	 Participant participant = manager.find(Participant.class, id);
-    	 if (participant != null) {
-    		 manager.remove(participant);
-    	 }
+        EntityTransaction transaction = manager.getTransaction();
+        transaction.begin();
+    	Participant participant = manager.find(Participant.class, id);
+    	if (participant != null) {
+    	    manager.remove(participant);
+    	}
+        transaction.commit();
     }
 }
 

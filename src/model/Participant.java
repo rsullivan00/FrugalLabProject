@@ -5,7 +5,6 @@ import javax.persistence.*;
 import java.io.*;
 import java.util.Set;
 
-
 /**
  * model.Participant.java
  * Created by Rick Sullivan on 5/27/2014.
@@ -17,7 +16,7 @@ import java.util.Set;
 public class Participant implements Serializable {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.TABLE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "participant_id")
   private int id;
   
@@ -39,9 +38,19 @@ public class Participant implements Serializable {
 	   inverseJoinColumns = @JoinColumn(name="project_id"))
 	private Set<Project> projects;
 
-   // return number of columns in the table
+    public Participant() {
+    }
+
+    public Participant(String firstName, String lastName, int role, String photoURL) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.photoURL = photoURL;
+    }
+
+    // return number of columns in the table
    public int getNumberOfColumns() {
-	   return 4;
+	   return 5;
    }
    
    // return the data in column i
@@ -54,6 +63,8 @@ public class Participant implements Serializable {
 		   return getLastName();
 	   else if (i == 3)
 		   return Integer.toString(getRole());
+       else if (i == 4)
+           return getPhotoURL();
 	   else
 		   throw new Exception("Error: invalid column index in participants table");
    }
