@@ -1,6 +1,6 @@
-package View;
+package view;
 
-import Controller.ParticipantTableController;
+import controller.ParticipantTableController;
 
 import javax.swing.*;
 import java.awt.*;
