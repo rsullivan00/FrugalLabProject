@@ -1,4 +1,4 @@
-package View;
+package view;
 
 /**
  * Created by Rick on 5/30/2014.

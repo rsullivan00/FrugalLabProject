@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import javax.persistence.*;
 
@@ -121,7 +121,7 @@ public class Project implements Serializable {
    }
 
    // set data column i to value
-   public Date setColumnData(int i, Object value) throws Exception {
+   public void setColumnData(int i, Object value) throws Exception {
        switch (i) {
            case (1):
                setProjectID(Integer.parseInt((String) value));
@@ -130,7 +130,7 @@ public class Project implements Serializable {
                setProjectName((String) value);
                break;
            case (3):
-               setOutcome((String value));
+               setOutcome((String) value);
                break;
            case (4):
                setStatus((String) value);

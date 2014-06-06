@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="2914045552">
+  <component name="DataSourceManagerImpl" format="xml" hash="3769296942">
     <data-source source="LOCAL" name="MySQL - projectDB@localhost" uuid="9dc6ec5a-33b7-4266-9570-68efbd3d15f4">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
@@ -13,6 +13,30 @@
         <property name="tinyInt1isBit" value="false" />
       </driver-properties>
       <libraries />
+    </data-source>
+    <data-source source="LOCAL" name="projectDB?zeroDateTimeBehavior=convertToNullPU" uuid="c1c1e0fb-6457-4b8b-9dfb-5463ec8c6d3b">
+      <driver-ref>mysql</driver-ref>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/projectDB?zeroDateTimeBehavior=convertToNull</jdbc-url>
+      <user-name>test</user-name>
+      <user-password>df9bdf98df99df9e</user-password>
+      <libraries>
+        <library>
+          <url>file://C:\Program Files (x86)\MySQL\Connector J 5.1.30\mysql-connector-java-5.1.30-bin.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="Participant" uuid="0ee2260c-de4a-4281-92e4-3090bba732c6">
+      <driver-ref>mysql</driver-ref>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/projectDB?zeroDateTimeBehavior=convertToNull</jdbc-url>
+      <user-name>test</user-name>
+      <user-password>df9bdf98df99df9e</user-password>
+      <libraries>
+        <library>
+          <url>file://C:\Program Files (x86)\MySQL\Connector J 5.1.30\mysql-connector-java-5.1.30-bin.jar</url>
+        </library>
+      </libraries>
     </data-source>
   </component>
 </project>

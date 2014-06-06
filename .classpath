@@ -5,5 +5,8 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/JPA 2.0-2.0"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/eclipselink"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/mysql-connector-java-5.1.30-bin"/>
+	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/appframework-1.0.3.jar"/>
+	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/swing-layout-1.0.3.jar"/>
+	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/beansbinding-1.2.1.jar"/>
 	<classpathentry kind="output" path="out/production/FrugalLabProject"/>
 </classpath>

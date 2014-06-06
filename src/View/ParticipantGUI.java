@@ -1,6 +1,6 @@
-package View;
+package view;
 
-import Controller.ParticipantTableController;
+import controller.ParticipantTableController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  * Created by Rick Sullivan on 5/27/2014.
  * COEN 160 Labs 7 and 8
  *
- * The ParticipantTableView creates and manages the UI for displaying the Model.Participant table.
+ * The ParticipantTableView creates and manages the UI for displaying the model.Participant table.
  * It scales according to the size of the user's screen.
  */
 public class ParticipantGUI extends javax.swing.JFrame {
@@ -34,10 +34,6 @@ public class ParticipantGUI extends javax.swing.JFrame {
     public ParticipantGUI() {
         this.participantTableController = new ParticipantTableController(this);
         createTableGUI();
-    }
-
-    public static void main(String[] args) {
-        ParticipantGUI gui = new ParticipantGUI();
     }
 
     private void createTableGUI() {

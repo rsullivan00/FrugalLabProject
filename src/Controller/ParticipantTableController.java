@@ -1,7 +1,7 @@
-package Controller;
+package controller;
 
-import Model.ParticipantTableModel;
-import View.ParticipantGUI;
+import model.ParticipantTableModel;
+import view.ParticipantGUI;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -11,7 +11,7 @@ import javax.swing.event.*;
 
 
 /**
- * Controller.ParticipantTableController.java
+ * controller.ParticipantTableController.java
  * Created by Rick Sullivan on 5/27/2014.
  * COEN 160 Labs 7 and 8
  *
@@ -25,13 +25,10 @@ public class ParticipantTableController implements ListSelectionListener, TableM
 	
 	public ParticipantTableController(ParticipantGUI gui) {
 		this.gui = gui;   
-         // create the tableModel using the data in the cachedRowSet
 		tableModel = new ParticipantTableModel();
 		tableModel.addTableModelListener(this);
 	}
 	
-	
-	// new code
 	public TableModel getTableModel() {
 		return tableModel;
 	}
