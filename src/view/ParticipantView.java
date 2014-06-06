@@ -10,6 +10,8 @@ import controller.ParticipantController;
 import model.Participant;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -49,18 +51,18 @@ public class ParticipantView extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         addButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
-        saveButton = new javax.swing.JButton();
         participantScrollPane = new javax.swing.JScrollPane();
         participantTable = new javax.swing.JTable(){
             @Override
             public boolean isCellEditable(int row, int column)
             {
-                /* Don't allow editing of ids or images */
-                if (row == 0 || row == 4) {
+                /* Don't allow editing of ids */
+                if (row == 0) {
                     return false;
                 }
-                /* We will return whether or not the user is an Admin */
-                return true;
+
+                /* Return whether or not the user is an Admin */
+                return MainView.getAdminMode();
             }
         };
 
@@ -70,11 +72,9 @@ public class ParticipantView extends javax.swing.JPanel {
 
         searchTextField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         searchTextField.setToolTipText("Enter a filtering string");
-        searchTextField.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                searchTextFieldInputMethodTextChanged(evt);
+        searchTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchTextFieldActionPerformed(evt);
             }
         });
 
@@ -94,13 +94,6 @@ public class ParticipantView extends javax.swing.JPanel {
             }
         });
 
-        saveButton.setText("Save changes");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -110,12 +103,10 @@ public class ParticipantView extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
                 .addComponent(addButton)
                 .addGap(18, 18, 18)
                 .addComponent(deleteButton)
-                .addGap(18, 18, 18)
-                .addComponent(saveButton)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -126,8 +117,7 @@ public class ParticipantView extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(addButton)
-                    .addComponent(deleteButton)
-                    .addComponent(saveButton))
+                    .addComponent(deleteButton))
                 .addContainerGap())
         );
 
@@ -164,28 +154,11 @@ public class ParticipantView extends javax.swing.JPanel {
         bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
-    /* Allow filtering based on input of search string */
-    private void searchTextFieldInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_searchTextFieldInputMethodTextChanged
-        TableRowSorter rowSorter = (TableRowSorter) this.participantTable.getRowSorter();
-        RowFilter<TableModel, Object> rf = null;
-        //If current expression doesn't parse, don't update.
-        try {
-            rf = RowFilter.regexFilter(searchTextField.getText(), 0);
-        } catch (java.util.regex.PatternSyntaxException e) {
-            return;
-        }
-        rowSorter.setRowFilter(rf);
-    }//GEN-LAST:event_searchTextFieldInputMethodTextChanged
-
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         Participant newParticipant = controller.addParticipant("", "", 0, "");
         participantList.add(newParticipant);
         participantTable.setModel(participantTable.getModel());
     }//GEN-LAST:event_addButtonActionPerformed
-
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         int row = participantTable.getSelectedRow();
@@ -193,6 +166,23 @@ public class ParticipantView extends javax.swing.JPanel {
         controller.deleteParticipant(participant.getId());
         participantList.remove(participant);
     }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void searchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTextFieldActionPerformed
+        /* Case insensitive regex for strings starting with search string */
+        String regex = "(?i)^" + searchTextField.getText();
+        TableRowSorter rowSorter = (TableRowSorter) this.participantTable.getRowSorter();
+        List<RowFilter<Object, Object>> rfs = new ArrayList<RowFilter<Object, Object>>(participantTable.getColumnCount());
+        RowFilter<Object, Object> of;
+        try {
+            for (int i = 0; i < participantTable.getColumnCount(); i++) {
+                rfs.add(RowFilter.regexFilter(regex, i));
+            }
+            of = RowFilter.orFilter(rfs);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+        rowSorter.setRowFilter(of);
+    }//GEN-LAST:event_searchTextFieldActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
@@ -204,7 +194,6 @@ public class ParticipantView extends javax.swing.JPanel {
     private javax.persistence.Query participantQuery;
     private javax.swing.JScrollPane participantScrollPane;
     private javax.swing.JTable participantTable;
-    private javax.swing.JButton saveButton;
     private javax.swing.JTextField searchTextField;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables

@@ -21,7 +21,7 @@ public class ParticipantService {
 
 	public ParticipantService(EntityManager manager) {
 		 this.manager = manager;
-	 }
+	}
 	 
     // method to create a new record
     public Participant createParticipant(String firstName, String lastName, int role, String photoURL) {
