@@ -13,7 +13,6 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.RowFilter;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 /**

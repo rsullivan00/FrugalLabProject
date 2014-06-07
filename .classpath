@@ -9,5 +9,6 @@
 	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/swing-layout-1.0.3.jar"/>
 	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/beansbinding-1.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/javax.persistence.jar"/>
+	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/documents-export-2014-06-07/jcalendar-1.4.jar"/>
 	<classpathentry kind="output" path="out/production/FrugalLabProject"/>
 </classpath>

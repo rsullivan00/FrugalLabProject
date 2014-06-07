@@ -1,168 +1,57 @@
 package model;
 
-import javax.persistence.*;
+import java.io.Serializable;
+import java.sql.Date;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+
+/**
+ * Created by Rick on 5/30/2014.
+ */
 @Entity(name = "project")
 public class Project implements Serializable {
-   public static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
-  @Id
-  @Column(name = "project_id")
-  @GeneratedValue(strategy = GenerationType.TABLE)
-  private int projectID;
+	@Id
+	@Column(name = "project_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int projectID;
   
-  @Column(name = "name")
-  private String projectName;
+	@Column(name = "name")
+	private String projectName;
   
-  @Column(name = "status")
-  private String status;
+	@Column(name = "status")
+	private String status;
 
-  @Column(name = "outcome")
-  private String outcome;
+	@Column(name = "outcome")
+	private String outcome;
   
-  @Column(name = "state")
-  private String state;
+	@Column(name = "state")
+	private String state;
   
-  @Column(name = "country")
-  private String country;
+	@Column(name = "country")
+	private String country;
   
-  @Column(name = "street_address")
-  private String streetAddress;
+	@Column(name = "city")
+	private String city;
   
-  @Column(name = "zip")
-  private int zipCode;
-
-  @Temporal(TemporalType.DATE)
-  @Column(name = "start_date")
-  private Date startDate;
-
-  @Temporal(TemporalType.DATE)
-  @Column(name = "end_date")
-  private Date endDate;
-
-  @Temporal(TemporalType.DATE)
-  @Column(name = "creation_date")
-  private Date creationDate;
+	@Column(name = "street_address")
+	private String streetAddress;
   
-  @ManyToMany(cascade=CascadeType.ALL, mappedBy="projects")
-  private Set<Participant> projectParticipants;
-
-	@Override
-	public String toString() {
-	    return "Project{" +
-	        "id=" + projectID +
-	        ", name='" + projectName + '\'' +
-	        ", status='" + status + '\'' +
-	        ", startDate=" + startDate.toString() +
-	        ", endDate=" + endDate.toString() +
-	        '}';
-	}
-
-   // return number of columns in the table
-   public int getNumberOfColumns() {
-	   return 11;
-   }
-
-   // return the data in column i
-   public String getColumnData(int i) throws Exception {
-       switch(i) {
-           case(0): return Integer.toString(getProjectID());
-           case(1): return getProjectName();
-           case(2): return getOutcome();
-           case(3): return getStatus();
-           case(4): return getState();
-           case(5): return getCountry();
-           case(6): return getStreetAddress();
-           case(7): return Integer.toString(getZipCode());
-           case(8):
-               return dateFormat.format(getStartDate());
-           case(9):
-               return dateFormat.format(getEndDate());
-           case(10):
-               return dateFormat.format(getCreationDate());
-           default:
-               throw new Exception("Error: invalid column index in participants table");
-       }
-   }
-
-   // return the name of column i
-   public String getColumnName(int i) throws Exception {
-	   String colName = null;
-       switch (i) {
-           case(1): colName = "project_id";
-                    break;
-           case(2): colName = "name";
-                    break;
-           case(3): colName = "outcome";
-                    break;
-           case(4): colName = "status" ;
-                    break;
-           case(5): colName = "state";
-                    break;
-           case(6): colName = "country";
-                    break;
-           case(7): colName = "street_address";
-                    break;
-           case(8): colName = "zip";
-                    break;
-           case(9): colName = "start_date";
-                    break;
-           case(10): colName = "end_date";
-                    break;
-           case(11): colName = "creation_Date";
-                    break;
-           default:
-               throw new Exception("Access to invalid column number in project table");
-       }
-
-	   return colName;
-   }
-
-   // set data column i to value
-   public void setColumnData(int i, Object value) throws Exception {
-       switch (i) {
-           case (1):
-               setProjectID(Integer.parseInt((String) value));
-               break;
-           case (2):
-               setProjectName((String) value);
-               break;
-           case (3):
-               setOutcome((String) value);
-               break;
-           case (4):
-               setStatus((String) value);
-               break;
-           case (5):
-               setState((String) value);
-               break;
-           case (6):
-               setCountry((String) value);
-               break;
-           case (7):
-               setStreetAddress((String) value);
-               break;
-           case (8):
-               setZipCode(Integer.parseInt((String) value));
-               break;
-           case (9):
-               setStartDate(dateFormat.parse((String) value));
-               break;
-           case (10):
-               setEndDate(dateFormat.parse((String) value));
-               break;
-           case (11):
-               setCreationDate(dateFormat.parse((String) value));
-               break;
-           default:
-               throw new Exception("Access to invalid column number in project table");
-       }
-   }
+	@Column(name = "zip")
+	private Integer zipCode;
+  
+	@Column(name = "start_date")
+	private Date startDate;
+  
+	@Column(name = "end_date")
+	private Date endDate;
+  
+	@Column(name = "creation_date")
+	private Date creationDate;
 
 	public int getProjectID() {
 		return projectID;
@@ -212,6 +101,14 @@ public class Project implements Serializable {
 		this.country = country;
 	}
 
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
 	public String getStreetAddress() {
 		return streetAddress;
 	}
@@ -220,11 +117,11 @@ public class Project implements Serializable {
 		this.streetAddress = streetAddress;
 	}
 
-	public int getZipCode() {
+	public Integer getZipCode() {
 		return zipCode;
 	}
 
-	public void setZipCode(int zipCode) {
+	public void setZipCode(Integer zipCode) {
 		this.zipCode = zipCode;
 	}
 
@@ -251,12 +148,26 @@ public class Project implements Serializable {
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
-
-	public Set<Participant> getProjectParticipants() {
-		return projectParticipants;
+	
+	public Project(){}
+	public Project(int projectID,String projectName, String status, String outcome,
+			String state, String country, String city, String streetAddress,
+			int zipCode, Date startDate, Date endDate, Date creationDate) {
+		super();
+		this.projectID = projectID;
+		this.projectName = projectName;
+		this.status = status;
+		this.outcome = outcome;
+		this.state = state;
+		this.country = country;
+		this.city = city;
+		this.streetAddress = streetAddress;
+		this.zipCode = zipCode;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.creationDate = creationDate;
 	}
 
-	public void setProjectParticipants(Set<Participant> projectParticipants) {
-		this.projectParticipants = projectParticipants;
-	}
+	
+
 }

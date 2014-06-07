@@ -306,7 +306,7 @@ public class MainView extends javax.swing.JFrame {
     	mainPanel.removeAll();
     	mainPanel.repaint();
         mainPanel.revalidate();
-    	JPanel childPanel =  new LoginView();
+    	JInternalFrame childPanel =  new LoginView();
         mainPanel.add(childPanel);
         mainPanel.repaint();
         mainPanel.revalidate();
