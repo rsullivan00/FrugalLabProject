@@ -18,10 +18,10 @@ import java.util.List;
  */
 
 // Jorge using Rick's code to model CategoryService
-public class ParticipantService {
+public class CategoryService {
 	private EntityManager manager;
 
-	public ParticipantService(EntityManager manager) {
+	public CategoryService(EntityManager manager) {
 		 this.manager = manager;
 	}
 	 
