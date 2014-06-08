@@ -48,7 +48,7 @@ public class StartUpView extends javax.swing.JFrame {
         setLocation(0, 0);
         desktop.setSize(getSize(d));
          try {
-			setIconImage(ImageIO.read(new File("C:\\Users\\Soumya\\workspace\\FrugalLabProject\\FrugalLabProject\\src\\images\\3_dots.png")));
+			setIconImage(ImageIO.read(new File("images/3_dots.png")));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

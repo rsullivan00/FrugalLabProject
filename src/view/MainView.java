@@ -46,7 +46,6 @@ public class MainView extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
-
         jFrame1 = new javax.swing.JFrame();
         jDialog1 = new javax.swing.JDialog();
         mainPanel = new javax.swing.JPanel();
@@ -294,10 +293,18 @@ public class MainView extends javax.swing.JFrame {
     }                                                 
 
     private void projectViewMenuActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        changeMode(true);
-        mainPanel.removeAll();
+        System.out.println("Participant view clicked");
+    	System.out.println(mainPanel.getComponents());
+    	mainPanel.removeAll();
+    	mainPanel.repaint();
+        mainPanel.revalidate();
+    	JInternalFrame view =  new ProjectView();
+        view.setVisible(true);
+
+        mainPanel.add(view);
         mainPanel.repaint();
         mainPanel.revalidate();
+        mainPanel.setVisible(true);
     }                                               
 
     private void loginMenuActionPerformed(java.awt.event.ActionEvent evt) {                                          
@@ -307,12 +314,12 @@ public class MainView extends javax.swing.JFrame {
     	mainPanel.repaint();
         mainPanel.revalidate();
     	JInternalFrame childPanel =  new LoginView();
+        childPanel.setVisible(true);
         mainPanel.add(childPanel);
         mainPanel.repaint();
         mainPanel.revalidate();
         mainPanel.setVisible(true);
-
-    }                                         
+    }
 
     private void logoutMenuActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
