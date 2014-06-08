@@ -1,6 +1,6 @@
 package service;
 
-import model.Participant;
+import model.Category;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -26,45 +26,41 @@ public class CategoryService {
 	}
 	 
     // method to create a new record
-    public Participant createParticipant(String firstName, String lastName, int role, String photoURL) {
+    public Category createCategory(String Category) {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
-        Participant participant = new Participant();
- 	    participant.setFirstName(firstName);
- 	    participant.setLastName(lastName);
- 	    participant.setRole(role);
-        participant.setPhotoURL(photoURL);
- 	    manager.persist(participant);
+        Category category = new Category();
+ 	    category.setName(Category);
+
+ 	    manager.persist(category);
 
         transaction.commit();
- 	    return participant;
+ 	    return category;
     }
     
     // method to read a record
-     public Participant readParticipant(int id) {
-    	 Participant participant = manager.find(Participant.class, id);
+     public Category readParticipant(int id) {
+    	 Category participant = manager.find(Category.class, id);
     	 return participant;
      }
 
      // method to read all records
-     public List<Participant> readAll() {
-    	 TypedQuery<Participant> query = manager.createQuery("SELECT e FROM participant e", Participant.class);
-    	 List<Participant> result =  query.getResultList();
+     public List<Category> readAll() {
+    	 TypedQuery<Category> query = manager.createQuery("SELECT e FROM participant e", Category.class);
+    	 List<Category> result =  query.getResultList();
 
     	 return result;   	 
      }
      
     // method to update a record
-     public Participant updateParticipant(int id, String firstName, String lastName, int role, String photoURL) {
+     public Category updateCategory(int id, String Category) {
          EntityTransaction transaction = manager.getTransaction();
          transaction.begin();
-    	 Participant participant = manager.find(Participant.class, id);
+    	 Category participant = manager.find(Category.class, id);
     	 if (participant != null) {
     		 participant.setId(id);
-    		 participant.setFirstName(firstName);
-    		 participant.setLastName(lastName);
-    		 participant.setRole(role);
-             participant.setPhotoURL(photoURL);
+    		 participant.setCategory(Category);
+
     	 }
          transaction.commit();
     	 return participant;
@@ -74,7 +70,7 @@ public class CategoryService {
     public void deleteParticipant(int id) {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
-    	Participant participant = manager.find(Participant.class, id);
+    	Category participant = manager.find(Category.class, id);
     	if (participant != null) {
     	    manager.remove(participant);
     	}
