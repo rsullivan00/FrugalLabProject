@@ -6,9 +6,8 @@
 
 package view;
 
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.*;
+import java.awt.*;
 
 /**
  *
@@ -293,15 +292,17 @@ public class MainView extends javax.swing.JFrame {
     }                                                 
 
     private void projectViewMenuActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        System.out.println("Participant view clicked");
+        System.out.println("Project view clicked");
     	System.out.println(mainPanel.getComponents());
     	mainPanel.removeAll();
     	mainPanel.repaint();
         mainPanel.revalidate();
-    	JInternalFrame view =  new ProjectView();
-        view.setVisible(true);
+    	JInternalFrame projectView =  new ProjectView();
 
-        mainPanel.add(view);
+        projectView.pack();
+        projectView.setVisible(true);
+
+        mainPanel.add(projectView);
         mainPanel.repaint();
         mainPanel.revalidate();
         mainPanel.setVisible(true);
@@ -313,9 +314,10 @@ public class MainView extends javax.swing.JFrame {
     	mainPanel.removeAll();
     	mainPanel.repaint();
         mainPanel.revalidate();
-    	JInternalFrame childPanel =  new LoginView();
-        childPanel.setVisible(true);
-        mainPanel.add(childPanel);
+    	JInternalFrame loginView =  new LoginView();
+        loginView.pack();
+        loginView.setVisible(true);
+        mainPanel.add(loginView);
         mainPanel.repaint();
         mainPanel.revalidate();
         mainPanel.setVisible(true);

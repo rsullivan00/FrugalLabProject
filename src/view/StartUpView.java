@@ -1,4 +1,4 @@
- package view;
+package view;
  
 import java.awt.Component;
 import java.awt.Dimension;
@@ -279,7 +279,7 @@ public class StartUpView extends javax.swing.JFrame {
 
         optionPane.addTab("Admin Mode", adminPane);
 
-        lblLogo.setIcon(new javax.swing.ImageIcon("C:\\Users\\Soumya\\workspace\\FrugalLabProject\\FrugalLabProject\\src\\images\\frigal_logo.jpg")); // NOI18N
+        lblLogo.setIcon(new javax.swing.ImageIcon("images/frigal_logo.jpg")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
