@@ -246,9 +246,4 @@ public class SearchProjectView extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtSearchCriteria;
     // End of variables declaration                   
 }
-class JTableButtonRenderer implements TableCellRenderer {        
-    @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        JButton button = (JButton)value;
-        return button;  
-    }
-}
+

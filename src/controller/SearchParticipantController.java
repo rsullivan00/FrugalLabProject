@@ -1,6 +1,7 @@
 package controller;
 
 import model.Participant;
+import model.Role;
 import service.ParticipantService;
 import view.SearchParticipantView;
 
@@ -9,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import java.util.List;
 
 /**
  * Created by Rick on 6/8/2014.
@@ -26,12 +28,16 @@ public class SearchParticipantController implements TableModelListener {
 		this.participantService = new ParticipantService(entityManager) ;
 	}
 
-    public Participant addParticipant(String firstName, String lastName, int role, String photoURL) {
+    public Participant addParticipant(String firstName, String lastName, Role role, String photoURL) {
         return participantService.createParticipant(firstName, lastName, role, photoURL);
     }
 
     public void editParticipant() {
 
+    }
+
+    public List<Participant> getAllParticipants() {
+        return participantService.readAll();
     }
 
     public void deleteParticipant(int id) {
@@ -45,9 +51,9 @@ public class SearchParticipantController implements TableModelListener {
 
         if (e.getType() == TableModelEvent.UPDATE) {
             int row = e.getFirstRow();
-            Participant p = view.participantList.get(row);
+            Participant p = view.getParticipantList().get(row);
             p = participantService.updateParticipant(p.getId(), p.getFirstName(), p.getLastName(), p.getRole(), p.getPhotoURL());
-            view.participantList.set(row, p);
+            view.getParticipantList().set(row, p);
         }
     }
 }

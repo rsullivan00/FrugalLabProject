@@ -7,6 +7,7 @@
 package view;
 
 import controller.ParticipantController;
+import model.Role;
 
 /**
  *
@@ -240,10 +241,11 @@ public class ParticipantView extends javax.swing.JInternalFrame {
     private void btnSaveParticipantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveParticipantActionPerformed
         String firstName = txtFirstName.getText();
         String lastName = txtLastName.getText();
-        int role = comboRole.getSelectedIndex();
+        Object role = comboRole.getSelectedItem();
+        //Role role = new Role(comboRole.getSelectedItem());
         /* Photo URL handling? */
 
-        controller.addParticipant(firstName, lastName, role, null);
+        //controller.addParticipant(firstName, lastName, role, null);
     }//GEN-LAST:event_btnSaveParticipantActionPerformed
 
     private void btnAddImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddImageActionPerformed

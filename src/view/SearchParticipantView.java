@@ -6,14 +6,17 @@
 
 package view;
 
-import controller.ParticipantController;
 import controller.SearchParticipantController;
 import model.Participant;
+import model.Role;
 
-import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -22,6 +25,7 @@ import javax.swing.table.TableRowSorter;
  */
 public class SearchParticipantView extends JInternalFrame {
     private SearchParticipantController controller;
+    private List<Participant> participantList;
 
     /**
      * Creates new form ParticipantView
@@ -30,6 +34,17 @@ public class SearchParticipantView extends JInternalFrame {
         controller = new SearchParticipantController(this);
         initComponents();
         participantTable.getModel().addTableModelListener(controller);
+     	TableCellRenderer buttonRenderer = new JTableButtonRenderer();
+        participantTable.getColumn("View/Edit").setCellRenderer(buttonRenderer);
+        participantTable.getColumn("Delete").setCellRenderer(buttonRenderer);
+    }
+
+    public List<Participant> getParticipantList() {
+        return participantList;
+    }
+
+    public void setParticipantList(List<Participant> participantList) {
+        this.participantList = participantList;
     }
 
     /**
@@ -40,11 +55,8 @@ public class SearchParticipantView extends JInternalFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("PersistenceUnit").createEntityManager();
-        participantQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT p FROM participant p INNER JOIN role r on p.role = r.id");
-        participantList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(participantQuery.getResultList());
         jPanel1 = new javax.swing.JPanel();
         searchTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -52,19 +64,7 @@ public class SearchParticipantView extends JInternalFrame {
         deleteButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         participantScrollPane = new javax.swing.JScrollPane();
-        participantTable = new javax.swing.JTable(){
-            @Override
-            public boolean isCellEditable(int row, int column)
-            {
-                /* Don't allow editing of ids */
-                if (row == 0) {
-                    return false;
-                }
-
-                /* Return whether or not the user is an Admin */
-                return MainView.getAdminMode();
-            }
-        };
+        participantTable = getParticipantsTable();
 
         setPreferredSize(new java.awt.Dimension(725, 343));
 
@@ -127,27 +127,6 @@ public class SearchParticipantView extends JInternalFrame {
         participantScrollPane.setPreferredSize(new java.awt.Dimension(600, 300));
 
         participantTable.setAutoCreateRowSorter(true);
-
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, participantList, participantTable);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${id}"));
-        columnBinding.setColumnName("Id");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${firstName}"));
-        columnBinding.setColumnName("First Name");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${lastName}"));
-        columnBinding.setColumnName("Last Name");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${role}"));
-        columnBinding.setColumnName("Role");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${photoURL}"));
-        columnBinding.setColumnName("Photo URL");
-        columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
         participantScrollPane.setViewportView(participantTable);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -192,13 +171,11 @@ public class SearchParticipantView extends JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        bindingGroup.bind();
-
         setBounds(0, 0, 725, 498);
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        Participant newParticipant = controller.addParticipant("", "", 0, "");
+        Participant newParticipant = controller.addParticipant("", "", new Role(), "");
         participantList.add(newParticipant);
         participantTable.setModel(participantTable.getModel());
     }//GEN-LAST:event_addButtonActionPerformed
@@ -227,6 +204,65 @@ public class SearchParticipantView extends JInternalFrame {
         rowSorter.setRowFilter(of);
     }//GEN-LAST:event_searchTextFieldActionPerformed
 
+    public JTable getParticipantsTable(){
+        participantList = controller.getAllParticipants();
+        Vector<String> columnNames = new Vector<String>();
+        columnNames.add("ID");
+        columnNames.add("First Name");
+        columnNames.add("Last Name");
+        columnNames.add("Role");
+        columnNames.add("Photo");
+        columnNames.add("View/Edit");
+        columnNames.add("Delete");
+        final Vector<Vector> participantData = new Vector<Vector>();
+        for(Participant participant: participantList){
+            Vector<Object> rowData = new Vector<Object>();
+            rowData.add(participant.getId());
+            rowData.add(participant.getFirstName());
+            rowData.add(participant.getLastName());
+            rowData.add(participant.getRole().getName());
+            rowData.add(participant.getPhotoURL());
+            final int id = participant.getId();
+            if(true){
+                JButton viewBtn = new JButton("View/Edit");
+                viewBtn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        viewParticipant(id);
+                    }
+                });
+                rowData.add(viewBtn);
+                JButton deleteBtn = new JButton("Delete");
+                deleteBtn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        controller.deleteParticipant(id);
+                    }
+                });
+                rowData.add(deleteBtn);
+            }
+            participantData.add(rowData);
+        }
+
+        JTable participantTable = new JTable(participantData, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column)
+            {
+                /* Don't allow editing of ids */
+                if (row == 0) {
+                    return false;
+                }
+
+                /* Return whether or not the user is an Admin */
+                return MainView.getAdminMode();
+            }
+        };
+        return participantTable;
+    }
+
+    public void viewParticipant(int id) {
+
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JButton deleteButton;
@@ -234,11 +270,8 @@ public class SearchParticipantView extends JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    public java.util.List<model.Participant> participantList;
-    private javax.persistence.Query participantQuery;
     private javax.swing.JScrollPane participantScrollPane;
     private javax.swing.JTable participantTable;
     private javax.swing.JTextField searchTextField;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

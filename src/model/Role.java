@@ -16,8 +16,14 @@ public class Role {
     @Column(name = "role_name")
     private String name;
 
+    public Role(int i) {
+        id = i;
+    }
 
-   // return number of columns in the table
+    public Role() {
+    }
+
+    // return number of columns in the table
    public int getNumberOfColumns() {
 	   return 2;
    }

@@ -1,6 +1,7 @@
 package controller;
 
 import model.Participant;
+import model.Role;
 import service.ParticipantService;
 import view.ParticipantView;
 import view.SearchParticipantView;
@@ -10,6 +11,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import java.util.List;
 
 /**
  * Created by Rick on 5/30/2014.
@@ -27,7 +29,7 @@ public class ParticipantController {
 		this.participantService = new ParticipantService(entityManager) ;
 	}
 
-    public Participant addParticipant(String firstName, String lastName, int role, String photoURL) {
+    public Participant addParticipant(String firstName, String lastName, Role role, String photoURL) {
         return participantService.createParticipant(firstName, lastName, role, photoURL);
     }
 
@@ -37,5 +39,9 @@ public class ParticipantController {
 
     public void deleteParticipant(int id) {
         participantService.deleteParticipant(id);
+    }
+
+    public List<Participant> getAllParticipants() {
+        return participantService.readAll();
     }
 }
