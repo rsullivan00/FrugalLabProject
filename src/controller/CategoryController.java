@@ -1,53 +1,41 @@
 package controller;
 
-import model.Category;
-import service.CategoryService;
-import view.CategoryView;
+import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
 
-/**
- * Created by Jorge
- */
-public class CategoryController implements TableModelListener {
-    private CategoryView view;
- 	private EntityManagerFactory entityManagerFactory;
-	private EntityManager entityManager;
-	private CategoryService categoryService;
-	public CategoryController(CategoryView view) {
-        this.view = view;
-		this.entityManagerFactory = Persistence.createEntityManagerFactory("PersistenceUnit");;
-		this.entityManager = entityManagerFactory.createEntityManager();
-		this.categoryService = new CategoryService(entityManager) ;
+import model.Category;
+import service.CategoryService;
+import view.CategoryView;
+
+
+
+public class CategoryController {
+	
+	private EntityManagerFactory emf;
+	private EntityManager manager;
+	private CategoryService CategoryService;
+	
+	public CategoryController() {
+		this.emf = Persistence.createEntityManagerFactory("PersistenceUnit");;
+		this.manager = emf.createEntityManager();
+		this.CategoryService = new CategoryService(manager);
 	}
 
-    public Category addCategory(String Category) {
-        return categoryService.createCategory(Category);
-       
-    }
-
-    public void editCategory() {
-
-    }
-
-    public void deleteCategory(int id) {
-       // CategoryService.deleteCategory(id);
-    }
-
-    @Override
-    public void tableChanged(TableModelEvent e) {
-        if (e.getColumn() < 0)
-            return;
-
-        if (e.getType() == TableModelEvent.UPDATE) {
-            int row = e.getFirstRow();
-            //c = categoryService.updateCategory(c.getId(), c.getCategoryName());
-            //view.CategoryList.set(row, c);
-        }
-    }
+	
+	
+	public Category addNewCategory(String name){
+		Category Category = new Category();
+		Category.setCategoryName(name);
+		Category C = CategoryService.createCategory(name);
+		System.out.println(C);
+		return C;
+	}
+	
+	public List<Category> getAllCategoryList(){
+		return CategoryService.readAll();
+	}
 }
