@@ -10,37 +10,37 @@ import javax.persistence.Id;
 @Entity(name = "role")
 public class Role {
     @Id
-    @Column(name = "login_username")
-    private String username;
+    @Column(name = "role_id")
+    private int id;
 
-    @Column(name = "login_password")
-    private String password;
+    @Column(name = "role_name")
+    private String name;
 
 
    // return number of columns in the table
    public int getNumberOfColumns() {
-	   return 4;
+	   return 2;
    }
 
    // return the data in column i
    public String getColumnData(int i) throws Exception {
 	   if (i == 0)
-		   return getUsername();
+		   return Integer.toString(getId());
 	   else if (i == 1)
-		   return getPassword();
+		   return getName();
 	   else
-		   throw new Exception("Error: invalid column index in login table");
+		   throw new Exception("Error: invalid column index in role table");
    }
 
    // return the name of column i
    public String getColumnName(int i) throws Exception {
 	   String colName = null;
 	   if (i == 0)
-		   colName = "login_username";
+		   colName = "role_id";
 	   else if (i == 1)
-		   colName = "login_password";
+		   colName = "role_name";
 	   else
-		   throw new Exception("Access to invalid column number in login table");
+		   throw new Exception("Access to invalid column number in role table");
 
 	   return colName;
    }
@@ -48,34 +48,26 @@ public class Role {
    // set data column i to value
    public void setColumnData(int i, Object value) throws Exception {
 	   if (i == 0)
-		   username = (String) value;
+		   id = Integer.parseInt((String) value);
 	   else if (i == 1)
-		   password = (String) value;
+		   name = (String) value;
 	   else
-		   throw new Exception("Error: invalid column index in login table");
+		   throw new Exception("Error: invalid column index in role table");
    }
 
-    @Override
-    public String toString() {
-        return "model.Login{" +
-                "login_username='" + username + '\'' +
-                ", login_password='" + password + '\'' +
-                '}';
+    public int getId() {
+        return id;
     }
 
-    public String getUsername() {
-        return username;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getName() {
+        return name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setName(String name) {
+        this.name = name;
     }
 }

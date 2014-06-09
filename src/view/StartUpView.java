@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
 
 /*
  * To change this template, choose Tools | Templates
@@ -20,12 +18,11 @@ import javax.swing.JOptionPane;
  * @author Soumya
  */
 public class StartUpView extends javax.swing.JFrame {
-    private LoginView alv = new LoginView();
-    private ProjectView pv = new ProjectView();
-    private JButton btn = new JButton();
+    private LoginView loginView = new LoginView();
+    private ProjectView projectView = new ProjectView();
+    private ParticipantView participantView = new ParticipantView();
     private boolean isAdminMode = false;
-    
-    
+
     public boolean isAdminMode() {
 		return isAdminMode;
 	}
@@ -53,7 +50,7 @@ public class StartUpView extends javax.swing.JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        changeMode(isAdminMode());
+        changeMode(true);
         SearchProjectView sv = new SearchProjectView();
         desktop.add(sv);
         sv.show();
@@ -309,13 +306,13 @@ public class StartUpView extends javax.swing.JFrame {
 
     private void btnLoginMenuActionPerformed(java.awt.event.ActionEvent evt) {                                             
         removeAllInternalFrame();
-        desktop.add(alv);   
-        alv.show();
+        desktop.add(loginView);
+        loginView.show();
     }                                            
 
     private void btnlogoutActionPerformed(java.awt.event.ActionEvent evt) {                                          
         System.out.println(desktop.getComponentCount());
-        alv.hide();
+        loginView.hide();
         removeAllInternalFrame();
     }                                         
 
@@ -327,26 +324,31 @@ public class StartUpView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }                                              
 
-    private void btnSearchParticipantActionPerformed(java.awt.event.ActionEvent evt) {                                                     
-        // TODO add your handling code here:
-    }                                                    
+    private void btnSearchParticipantActionPerformed(java.awt.event.ActionEvent evt) {
+        removeAllInternalFrame();
+        SearchParticipantView searchParticipantView = new SearchParticipantView();
+        desktop.add(searchParticipantView);
+        searchParticipantView.setVisible(true);
+    }
 
     private void btnAddParticipantActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        // TODO add your handling code here:
-    }                                                 
+        removeAllInternalFrame();
+        desktop.add(participantView);
+        participantView.setVisible(true);
+    }
 
     private void btnSearchProjectActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         removeAllInternalFrame();
         SearchProjectView sv = new SearchProjectView();
         desktop.add(sv);
-        sv.show();
+        sv.setVisible(true);
     }                                                
 
     private void btnAddProjectActionPerformed(java.awt.event.ActionEvent evt) {                                              
     	removeAllInternalFrame();
-        desktop.add(pv);
-        pv.show();
-    }                                             
+        desktop.add(projectView);
+        projectView.setVisible(true);
+    }
 
     /**
      * @param args the command line arguments

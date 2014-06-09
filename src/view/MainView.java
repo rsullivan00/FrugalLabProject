@@ -7,7 +7,7 @@
 package view;
 
 import javax.swing.*;
-import java.awt.*;
+import java.util.Arrays;
 
 /**
  *
@@ -268,16 +268,14 @@ public class MainView extends javax.swing.JFrame {
     }                                                     
 
     private void participantViewMenuActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-        // TODO add your handling code here:
         System.out.println("Participant view clicked");
-    	System.out.println(mainPanel.getComponents());
+    	System.out.println(Arrays.toString(mainPanel.getComponents()));
     	mainPanel.removeAll();
     	mainPanel.repaint();
         mainPanel.revalidate();
-    	JPanel childPanel =  new ParticipantView();
-        childPanel.setBounds(10, 10, mainPanel.getWidth() - 10, 400);
+        JInternalFrame participantView = new SearchParticipantView();
 
-        mainPanel.add(childPanel);
+        mainPanel.add(participantView);
         mainPanel.repaint();
         mainPanel.revalidate();
         mainPanel.setVisible(true);
