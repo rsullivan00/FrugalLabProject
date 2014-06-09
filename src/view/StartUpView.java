@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 /*
  * To change this template, choose Tools | Templates
@@ -21,8 +23,11 @@ public class StartUpView extends javax.swing.JFrame {
     private LoginView loginView = new LoginView();
     private ProjectView projectView = new ProjectView();
     private ParticipantView participantView = new ParticipantView();
+    private CategoryView cv = new CategoryView();
+    
     private boolean isAdminMode = false;
-
+    
+    
     public boolean isAdminMode() {
 		return isAdminMode;
 	}
@@ -318,10 +323,14 @@ public class StartUpView extends javax.swing.JFrame {
 
     private void btnSearchCategoryActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
+
     }                                                 
 
     private void btnAddCategoryActionPerformed(java.awt.event.ActionEvent evt) {                                               
         // TODO add your handling code here:
+    	removeAllInternalFrame();
+        desktop.add(cv);
+        cv.show();
     }                                              
 
     private void btnSearchParticipantActionPerformed(java.awt.event.ActionEvent evt) {

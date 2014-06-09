@@ -5,9 +5,7 @@
     <class>model.Participant</class>
     <class>model.Project</class>
     <class>model.Login</class>
-    <class>model.Role</class>
-    <class>model.Role</class>
-    <class>model.Category</class>
+      <class>model.Role</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/projectDB?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="test"/>
