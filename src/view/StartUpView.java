@@ -23,6 +23,9 @@ public class StartUpView extends javax.swing.JFrame {
     private LoginView alv = new LoginView();
     private ProjectView pv = new ProjectView();
     private JButton btn = new JButton();
+    private CategoryView cv = new CategoryView();
+    private ParticipantView tv = new ParticipantView();
+    
     private boolean isAdminMode = false;
     
     
@@ -53,7 +56,7 @@ public class StartUpView extends javax.swing.JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        changeMode(isAdminMode());
+        //changeMode(isAdminMode());
         SearchProjectView sv = new SearchProjectView();
         desktop.add(sv);
         sv.show();
@@ -321,10 +324,14 @@ public class StartUpView extends javax.swing.JFrame {
 
     private void btnSearchCategoryActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
+
     }                                                 
 
     private void btnAddCategoryActionPerformed(java.awt.event.ActionEvent evt) {                                               
         // TODO add your handling code here:
+    	removeAllInternalFrame();
+        desktop.add(cv);
+        cv.show();
     }                                              
 
     private void btnSearchParticipantActionPerformed(java.awt.event.ActionEvent evt) {                                                     
@@ -333,6 +340,10 @@ public class StartUpView extends javax.swing.JFrame {
 
     private void btnAddParticipantActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
+        removeAllInternalFrame();
+        SearchProjectView tv = new SearchProjectView();
+        desktop.add(tv);
+        tv.show();
     }                                                 
 
     private void btnSearchProjectActionPerformed(java.awt.event.ActionEvent evt) {                                                 

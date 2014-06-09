@@ -27,7 +27,7 @@ public class Category implements Serializable {
        if (i == 0)
            return Integer.toString(getId());
        else if (i == 1)
-           return getName();
+           return getCategoryName();
        else
            throw new Exception("Error: invalid column index in category table");
     }
@@ -71,11 +71,11 @@ public class Category implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
+    public String getCategoryName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setCategoryName(String name) {
         this.name = name;
     }
 }

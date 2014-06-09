@@ -5,10 +5,10 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/JPA 2.0-2.0"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/eclipselink"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/mysql-connector-java-5.1.30-bin"/>
-	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/appframework-1.0.3.jar"/>
-	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/swing-layout-1.0.3.jar"/>
-	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/beansbinding-1.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/javax.persistence.jar"/>
-	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/documents-export-2014-06-07/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="/Users/Jorge/Google Drive/COEN 160 - OO Project/PROJECT_IMPLEMENTATION/changes_6_7_2014/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="/Users/Jorge/Desktop/beansbinding-1.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Jorge/Desktop/eclipselink/jlib/jpa/javax.persistence_2.1.0.v201304241213.jar"/>
+	<classpathentry kind="lib" path="/Users/Jorge/Desktop/eclipselink/jlib/eclipselink.jar"/>
+	<classpathentry kind="lib" path="/Users/Jorge/Desktop/mysql-connector-java-5.1.30/mysql-connector-java-5.1.30-bin.jar"/>
 	<classpathentry kind="output" path="out/production/FrugalLabProject"/>
 </classpath>

@@ -8,8 +8,8 @@
       <class>model.Role</class>
     <properties>
       <property name="eclipselink.jdbc.url" value="jdbc:mysql://localhost:3306/projectDB?zeroDateTimeBehavior=convertToNull"/>
-      <property name="eclipselink.jdbc.user" value="test"/>
-      <property name="eclipselink.jdbc.password" value="1234"/>
+      <property name="eclipselink.jdbc.user" value="root"/>
+      <property name="eclipselink.jdbc.password" value="mews"/>
       <property name="eclipselink.jdbc.driver" value="com.mysql.jdbc.Driver"/>
     </properties>
   </persistence-unit>

@@ -20,7 +20,6 @@ import java.util.List;
 // Jorge using Rick's code to model CategoryService
 public class CategoryService {
 	private EntityManager manager;
-
 	public CategoryService(EntityManager manager) {
 		 this.manager = manager;
 	}
@@ -30,7 +29,7 @@ public class CategoryService {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
         Category category = new Category();
- 	    category.setName(Category);
+ 	    category.setCategoryName(Category);
 
  	    manager.persist(category);
 
@@ -39,9 +38,9 @@ public class CategoryService {
     }
     
     // method to read a record
-     public Category readParticipant(int id) {
-    	 Category participant = manager.find(Category.class, id);
-    	 return participant;
+     public Category readCategory(int id) {
+    	 Category category = manager.find(Category.class, id);
+    	 return category;
      }
 
      // method to read all records
@@ -56,23 +55,23 @@ public class CategoryService {
      public Category updateCategory(int id, String Category) {
          EntityTransaction transaction = manager.getTransaction();
          transaction.begin();
-    	 Category participant = manager.find(Category.class, id);
-    	 if (participant != null) {
-    		 participant.setId(id);
-    		 participant.setCategory(Category);
+    	 Category category = manager.find(Category.class, id);
+    	 if (category != null) {
+    		 category.setId(id);
+    		 category.setCategoryName(Category);
 
     	 }
          transaction.commit();
-    	 return participant;
+    	 return category;
      }
 
     // method to delete a record
-    public void deleteParticipant(int id) {
+    public void deleteCategory(int id) {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
-    	Category participant = manager.find(Category.class, id);
-    	if (participant != null) {
-    	    manager.remove(participant);
+    	Category category = manager.find(Category.class, id);
+    	if (category != null) {
+    	    manager.remove(category);
     	}
         transaction.commit();
     }
