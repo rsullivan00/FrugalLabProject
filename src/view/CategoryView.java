@@ -6,18 +6,26 @@
 
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import controller.CategoryController;
 import controller.ParticipantController;
+import controller.ProjectController;
 import model.Category;
-import model.Participant;
+import model.Project;
+import service.CategoryService;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.RowFilter;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -25,15 +33,21 @@ import javax.swing.table.TableRowSorter;
  * @author Jorge
  */
 public class CategoryView extends javax.swing.JInternalFrame {
-	private CategoryController controller;
+	private CategoryController categoryController = new CategoryController();
     /**
      * Creates new form CategoryVieww
      */
     public CategoryView() {
-    	controller = new CategoryController(this);
-    	initComponents();
-        jTable1.getModel().addTableModelListener(controller);
-        setSize(new Dimension(500,500));
+
+        initComponents();
+        
+        JTable jt = getCategoryListTable(categoryController.getAllCategoryList());
+    	JScrollPane scrollpane = new JScrollPane(jt);
+    	//jTable1.setLayout(new BorderLayout());
+    	jTable1.add(scrollpane);
+    	
+
+
     }
 
     /**
@@ -170,14 +184,28 @@ public class CategoryView extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        //Controller newController = controller.addCategory("robots");
-        //participantList.add(newParticipant);
-        jTable1.setModel(jTable1.getModel());
+    	categoryController.addNewCategory(jTextField1.getText());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+    
+    public JTable getCategoryListTable(List<Category> categoryList){
+    	Vector<String> columnNames = new Vector<String>();
+    	//columnNames.add("Category Name");
+    	Vector<Vector> CategoryData = new Vector<Vector>();
+    	for(Category category:categoryList ){
+    		Vector<Object> categoryData = new Vector<Object>();
+    		categoryData.add(category.getCategoryName());
+    
+			final int id = category.getId();
+
+    		categoryData.add(categoryData);
+    	}
+    	JTable categoryTable = new JTable(CategoryData, columnNames);
+    	return categoryTable;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
