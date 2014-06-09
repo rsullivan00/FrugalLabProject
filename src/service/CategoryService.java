@@ -46,7 +46,7 @@ public class CategoryService {
 
      // method to read all records
      public List<Category> readAll() {
-    	 TypedQuery<Category> query = manager.createQuery("SELECT e FROM category e", Category.class);
+    	 TypedQuery<Category> query = manager.createQuery("SELECT e FROM participant e", Category.class);
     	 List<Category> result =  query.getResultList();
 
     	 return result;   	 
@@ -70,8 +70,8 @@ public class CategoryService {
     public void deleteCategory(int id) {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
-    	Category category = manager.find(Category.class, id);
-    	if (category != null) {
+    	Category participant = manager.find(Category.class, id);
+    	if (participant != null) {
     	    manager.remove(category);
     	}
         transaction.commit();
