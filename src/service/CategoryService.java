@@ -20,6 +20,7 @@ import java.util.List;
 // Jorge using Rick's code to model CategoryService
 public class CategoryService {
 	private EntityManager manager;
+
 	public CategoryService(EntityManager manager) {
 		 this.manager = manager;
 	}
@@ -69,8 +70,8 @@ public class CategoryService {
     public void deleteCategory(int id) {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
-    	Category category = manager.find(Category.class, id);
-    	if (category != null) {
+    	Category participant = manager.find(Category.class, id);
+    	if (participant != null) {
     	    manager.remove(category);
     	}
         transaction.commit();

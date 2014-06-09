@@ -19,7 +19,6 @@ public class CategoryController implements TableModelListener {
  	private EntityManagerFactory entityManagerFactory;
 	private EntityManager entityManager;
 	private CategoryService categoryService;
-
 	public CategoryController(CategoryView view) {
         this.view = view;
 		this.entityManagerFactory = Persistence.createEntityManagerFactory("PersistenceUnit");;
@@ -48,8 +47,9 @@ public class CategoryController implements TableModelListener {
         if (e.getType() == TableModelEvent.UPDATE) {
             int row = e.getFirstRow();
             Category c = view.CategoryList.get(row);
-            c = categoryService.updateCategory(c.getId(), c.getCategoryName());
-            view.CategoryList.set(row, c);
+            Category c = view.
+            //c = categoryService.updateCategory(c.getId(), c.getCategoryName());
+            //view.CategoryList.set(row, c);
         }
     }
 }

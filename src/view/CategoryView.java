@@ -6,17 +6,34 @@
 
 package view;
 
+import java.awt.Dimension;
+
+import controller.CategoryController;
+import controller.ParticipantController;
+import model.Category;
+import model.Participant;
+
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.RowFilter;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author Jorge
  */
 public class CategoryView extends javax.swing.JInternalFrame {
-
+	private CategoryController controller;
     /**
      * Creates new form CategoryVieww
      */
     public CategoryView() {
-        initComponents();
+    	controller = new CategoryController(this);
+    	initComponents();
+        jTable1.getModel().addTableModelListener(controller);
+        setSize(new Dimension(500,500));
     }
 
     /**
@@ -153,6 +170,9 @@ public class CategoryView extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        Controller newController = controller.addCategory("robots");
+        //participantList.add(newParticipant);
+        jTable1.setModel(jTable1.getModel());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
