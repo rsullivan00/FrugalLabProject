@@ -3,9 +3,6 @@
 	<output-test url="file://$MODULE_DIR$/out/test/FrugalLabProject"/>
 	<exclude-output/>
 	<contentEntry url="file://$MODULE_DIR$"/>
-	<lib name="javax.persistence.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/javax.persistence.jar!/"/>
-	</lib>
 	<levels>
 		<level name="JPA 2.0-2.0" value="project"/>
 	</levels>

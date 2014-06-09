@@ -170,7 +170,7 @@ public class CategoryView extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        Controller newController = controller.addCategory("robots");
+        //Controller newController = controller.addCategory("robots");
         //participantList.add(newParticipant);
         jTable1.setModel(jTable1.getModel());
     }//GEN-LAST:event_jButton1ActionPerformed

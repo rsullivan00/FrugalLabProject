@@ -46,8 +46,6 @@ public class CategoryController implements TableModelListener {
 
         if (e.getType() == TableModelEvent.UPDATE) {
             int row = e.getFirstRow();
-            Category c = view.CategoryList.get(row);
-            Category c = view.
             //c = categoryService.updateCategory(c.getId(), c.getCategoryName());
             //view.CategoryList.set(row, c);
         }
