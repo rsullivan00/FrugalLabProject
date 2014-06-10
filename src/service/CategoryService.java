@@ -46,7 +46,7 @@ public class CategoryService {
 
      // method to read all records
      public List<Category> readAll() {
-    	 TypedQuery<Category> query = manager.createQuery("SELECT e FROM participant e", Category.class);
+    	 TypedQuery<Category> query = manager.createQuery("SELECT e FROM category e", Category.class);
     	 List<Category> result =  query.getResultList();
 
     	 return result;   	 
