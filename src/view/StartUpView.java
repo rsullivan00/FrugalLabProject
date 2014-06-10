@@ -27,15 +27,7 @@ public class StartUpView extends javax.swing.JFrame {
     private ProjectView projectView = new ProjectView();
     private ParticipantView participantView;
     private CategoryView cv = new CategoryView();
-    
-    private static boolean adminMode = false;
-    
-    public static boolean isAdminMode() {
-		return adminMode;
-	}
-	public static void setAdminMode(boolean isAdminMode) {
-		StartUpView.adminMode = isAdminMode;
-	}
+
 	/**
      * Creates new form StartUpView
      */

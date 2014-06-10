@@ -6,6 +6,8 @@
 
 package view;
 
+import controller.ProjectProperties;
+import controller.RoleController;
 import controller.SearchParticipantController;
 import model.Participant;
 import model.Role;
@@ -62,6 +64,7 @@ public class SearchParticipantView extends JInternalFrame {
         participantScrollPane = new javax.swing.JScrollPane();
         participantTable = getParticipantsTable();
 
+        setClosable(true);
         setPreferredSize(new java.awt.Dimension(725, 343));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Search Participants"));
@@ -168,6 +171,8 @@ public class SearchParticipantView extends JInternalFrame {
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         ParticipantView pv = new ParticipantView();
         pv.setVisible(true);
+        this.getParent().add(pv);
+        pv.moveToFront();
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void searchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTextFieldActionPerformed
@@ -199,22 +204,24 @@ public class SearchParticipantView extends JInternalFrame {
         columnNames.add("Last Name");
         columnNames.add("Role");
         columnNames.add("Photo");
-        if (StartUpView.isAdminMode()) {
+        if (ProjectProperties.isAdminMode) {
             columnNames.add("View/Edit");
             columnNames.add("Delete");
         } else {
             columnNames.add("View");
         }
         final Vector<Vector> participantData = new Vector<Vector>();
+
+        List<Role> roleList = new RoleController().getAllRoles();
         for(final Participant participant: participantList){
             Vector<Object> rowData = new Vector<Object>();
             rowData.add(participant.getId());
             rowData.add(participant.getFirstName());
             rowData.add(participant.getLastName());
-            rowData.add(participant.getRole());
+            rowData.add(roleList.get(participant.getRole()).getName());
             rowData.add(participant.getPhotoURL());
             final int id = participant.getId();
-            if(StartUpView.isAdminMode()){
+            if(ProjectProperties.isAdminMode){
                 rowData.add("View/Edit");
                 rowData.add("Delete");
             } else {
@@ -239,7 +246,7 @@ public class SearchParticipantView extends JInternalFrame {
 
         ButtonColumn viewButtonColumn = new ButtonColumn(participantTable, view, 5);
 
-        if (StartUpView.isAdminMode()) {
+        if (ProjectProperties.isAdminMode) {
             Action delete = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     JTable table = (JTable) e.getSource();
@@ -264,6 +271,12 @@ public class SearchParticipantView extends JInternalFrame {
         pv.setVisible(true);
         this.getParent().add(pv);
         pv.moveToFront();
+    }
+
+    public void updateTable() {
+        /* Re-query DB and construct new table */
+        participantTable = getParticipantsTable();
+        participantScrollPane.setViewportView(participantTable);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

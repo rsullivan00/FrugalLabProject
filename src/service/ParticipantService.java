@@ -2,6 +2,9 @@ package service;
 
 import model.Participant;
 import model.Role;
+import org.eclipse.persistence.config.CacheUsage;
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -47,7 +50,8 @@ public class ParticipantService {
 
      // method to read all records
      public List<Participant> readAll() {
-    	 TypedQuery<Participant> query = manager.createQuery("SELECT e FROM participant e", Participant.class);
+         /* Query while ignoring cache to always get new data */
+    	 TypedQuery<Participant> query = manager.createQuery("SELECT e FROM participant e", Participant.class).setHint(QueryHints.REFRESH, HintValues.TRUE);
     	 List<Participant> result =  query.getResultList();
 
     	 return result;   	 

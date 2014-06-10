@@ -24,8 +24,8 @@ public class ProjectController {
 		this.projectService = new ProjectService(manager);
 	}
 
-	
-	
+
+
 	public Project addNewProject(String name,String status,String outcome,String state,String streetAddress,String city,String country,Integer zipCode,Date startDate,Date endDate){
 		Project project = new Project();
 		project.setProjectName(name);

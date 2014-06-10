@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 import controller.LoginController;
 import controller.ProjectController;
+import controller.ProjectProperties;
 
 /*
  * To change this template, choose Tools | Templates
@@ -135,20 +136,20 @@ public class LoginView extends javax.swing.JInternalFrame {
     		lblError1.setText("Username and password both are required fileds");
     		lblError1.setVisible(true);
     		
-    		StartUpView.setAdminMode(false);
+    		ProjectProperties.isAdminMode = false;
     	}else if(loginController.validateUser(txtUserName.getText(), txtPassword.getText())){
     		lblError1.setVisible(false);
     		txtUserName.setText("");
     		txtPassword.setText("");
     		JOptionPane.showMessageDialog(this, "Login Successful!!");
     		this.hide();
-    		StartUpView.setAdminMode(true);
+            ProjectProperties.isAdminMode = false;
     	}else{
     		lblError1.setText("Invalid Login details.Try again!!");
     		lblError1.setVisible(true);
     		txtUserName.setText("");
     		txtPassword.setText("");
-    		StartUpView.setAdminMode(false);
+            ProjectProperties.isAdminMode = false;
     	}
 
     }                                             
@@ -157,7 +158,7 @@ public class LoginView extends javax.swing.JInternalFrame {
 		lblError1.setVisible(false);
     	txtUserName.setText("");
 		txtPassword.setText("");
-		StartUpView.setAdminMode(false);
+        ProjectProperties.isAdminMode = false;
         this.hide();
     }                                              
 
