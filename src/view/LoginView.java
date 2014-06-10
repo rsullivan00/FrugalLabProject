@@ -15,7 +15,6 @@ import controller.ProjectController;
  * @author Soumya
  */
 public class LoginView extends javax.swing.JInternalFrame {
-    private static final StartUpView mainView = new StartUpView();
     private static final LoginController loginController = new LoginController();
     /**
      * Creates new form LoginForm
@@ -136,20 +135,20 @@ public class LoginView extends javax.swing.JInternalFrame {
     		lblError1.setText("Username and password both are required fileds");
     		lblError1.setVisible(true);
     		
-    		mainView.setAdminMode(false);
+    		StartUpView.setAdminMode(false);
     	}else if(loginController.validateUser(txtUserName.getText(), txtPassword.getText())){
     		lblError1.setVisible(false);
     		txtUserName.setText("");
     		txtPassword.setText("");
     		JOptionPane.showMessageDialog(this, "Login Successful!!");
     		this.hide();
-    		mainView.setAdminMode(true);
+    		StartUpView.setAdminMode(true);
     	}else{
     		lblError1.setText("Invalid Login details.Try again!!");
     		lblError1.setVisible(true);
     		txtUserName.setText("");
     		txtPassword.setText("");
-    		mainView.setAdminMode(false);
+    		StartUpView.setAdminMode(false);
     	}
 
     }                                             
@@ -158,7 +157,7 @@ public class LoginView extends javax.swing.JInternalFrame {
 		lblError1.setVisible(false);
     	txtUserName.setText("");
 		txtPassword.setText("");
-		mainView.setAdminMode(false);
+		StartUpView.setAdminMode(false);
         this.hide();
     }                                              
 

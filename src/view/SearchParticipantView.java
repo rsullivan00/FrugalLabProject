@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
@@ -33,10 +34,6 @@ public class SearchParticipantView extends JInternalFrame {
     public SearchParticipantView() {
         controller = new SearchParticipantController(this);
         initComponents();
-        participantTable.getModel().addTableModelListener(controller);
-     	TableCellRenderer buttonRenderer = new JTableButtonRenderer();
-        participantTable.getColumn("View/Edit").setCellRenderer(buttonRenderer);
-        participantTable.getColumn("Delete").setCellRenderer(buttonRenderer);
     }
 
     public List<Participant> getParticipantList() {
@@ -59,9 +56,8 @@ public class SearchParticipantView extends JInternalFrame {
         entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("PersistenceUnit").createEntityManager();
         jPanel1 = new javax.swing.JPanel();
         searchTextField = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
         addButton = new javax.swing.JButton();
-        deleteButton = new javax.swing.JButton();
+        SearchButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         participantScrollPane = new javax.swing.JScrollPane();
         participantTable = getParticipantsTable();
@@ -79,8 +75,6 @@ public class SearchParticipantView extends JInternalFrame {
             }
         });
 
-        jLabel1.setText("Search:");
-
         addButton.setText("Add participant");
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,10 +82,10 @@ public class SearchParticipantView extends JInternalFrame {
             }
         });
 
-        deleteButton.setText("Delete selected");
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+        SearchButton.setText("Search");
+        SearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteButtonActionPerformed(evt);
+                SearchButtonActionPerformed(evt);
             }
         });
 
@@ -100,14 +94,12 @@ public class SearchParticipantView extends JInternalFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGap(38, 38, 38)
                 .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(SearchButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 224, Short.MAX_VALUE)
                 .addComponent(addButton)
-                .addGap(18, 18, 18)
-                .addComponent(deleteButton)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -115,10 +107,9 @@ public class SearchParticipantView extends JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(18, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
                     .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(addButton)
-                    .addComponent(deleteButton))
+                    .addComponent(SearchButton))
                 .addContainerGap())
         );
 
@@ -175,17 +166,9 @@ public class SearchParticipantView extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        Participant newParticipant = controller.addParticipant("", "", new Role(), "");
-        participantList.add(newParticipant);
-        participantTable.setModel(participantTable.getModel());
+        ParticipantView pv = new ParticipantView();
+        pv.setVisible(true);
     }//GEN-LAST:event_addButtonActionPerformed
-
-    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        int row = participantTable.getSelectedRow();
-        Participant participant = participantList.get(row);
-        controller.deleteParticipant(participant.getId());
-        participantList.remove(participant);
-    }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void searchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTextFieldActionPerformed
         /* Case insensitive regex for strings starting with search string */
@@ -204,6 +187,10 @@ public class SearchParticipantView extends JInternalFrame {
         rowSorter.setRowFilter(of);
     }//GEN-LAST:event_searchTextFieldActionPerformed
 
+    private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
+        searchTextFieldActionPerformed(evt);
+    }//GEN-LAST:event_SearchButtonActionPerformed
+
     public JTable getParticipantsTable(){
         participantList = controller.getAllParticipants();
         Vector<String> columnNames = new Vector<String>();
@@ -212,62 +199,77 @@ public class SearchParticipantView extends JInternalFrame {
         columnNames.add("Last Name");
         columnNames.add("Role");
         columnNames.add("Photo");
-        columnNames.add("View/Edit");
-        columnNames.add("Delete");
+        if (StartUpView.isAdminMode()) {
+            columnNames.add("View/Edit");
+            columnNames.add("Delete");
+        } else {
+            columnNames.add("View");
+        }
         final Vector<Vector> participantData = new Vector<Vector>();
-        for(Participant participant: participantList){
+        for(final Participant participant: participantList){
             Vector<Object> rowData = new Vector<Object>();
             rowData.add(participant.getId());
             rowData.add(participant.getFirstName());
             rowData.add(participant.getLastName());
-            rowData.add(participant.getRole().getName());
+            rowData.add(participant.getRole());
             rowData.add(participant.getPhotoURL());
             final int id = participant.getId();
-            if(true){
-                JButton viewBtn = new JButton("View/Edit");
-                viewBtn.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        viewParticipant(id);
-                    }
-                });
-                rowData.add(viewBtn);
-                JButton deleteBtn = new JButton("Delete");
-                deleteBtn.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        controller.deleteParticipant(id);
-                    }
-                });
-                rowData.add(deleteBtn);
+            if(StartUpView.isAdminMode()){
+                rowData.add("View/Edit");
+                rowData.add("Delete");
+            } else {
+                rowData.add("View");
             }
+
             participantData.add(rowData);
         }
 
-        JTable participantTable = new JTable(participantData, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column)
-            {
-                /* Don't allow editing of ids */
-                if (row == 0) {
-                    return false;
-                }
+        JTable participantTable = new JTable(participantData, columnNames);
 
-                /* Return whether or not the user is an Admin */
-                return MainView.getAdminMode();
+        Action view = new AbstractAction()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                JTable table = (JTable)e.getSource();
+                int modelRow = Integer.valueOf( e.getActionCommand() );
+                int id = ((Integer) table.getValueAt(modelRow, 0));
+                viewParticipant(id);
             }
         };
+
+        ButtonColumn viewButtonColumn = new ButtonColumn(participantTable, view, 5);
+
+        if (StartUpView.isAdminMode()) {
+            Action delete = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    JTable table = (JTable) e.getSource();
+                    int modelRow = Integer.valueOf(e.getActionCommand());
+                    int id = ((Integer) table.getValueAt(modelRow, 0));
+                    /* Update DB */
+                    controller.deleteParticipant(id);
+                    /* Update table */
+                    ((DefaultTableModel) table.getModel()).removeRow(modelRow);
+                }
+            };
+
+            ButtonColumn deleteButtonColumn = new ButtonColumn(participantTable, delete, 6);
+        }
+
         return participantTable;
     }
 
     public void viewParticipant(int id) {
-
+        Participant p = controller.getParticipant(id);
+        ParticipantView pv = new ParticipantView(p);
+        pv.setVisible(true);
+        this.getParent().add(pv);
+        pv.moveToFront();
     }
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton SearchButton;
     private javax.swing.JButton addButton;
-    private javax.swing.JButton deleteButton;
     private javax.persistence.EntityManager entityManager;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane participantScrollPane;

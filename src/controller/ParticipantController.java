@@ -29,12 +29,16 @@ public class ParticipantController {
 		this.participantService = new ParticipantService(entityManager) ;
 	}
 
-    public Participant addParticipant(String firstName, String lastName, Role role, String photoURL) {
+    public Participant addParticipant(String firstName, String lastName, int role, String photoURL) {
         return participantService.createParticipant(firstName, lastName, role, photoURL);
     }
 
-    public void editParticipant() {
+    public Participant editParticipant(int id, String firstName, String lastName, int role, String photoURL) {
+        return participantService.updateParticipant(id, firstName, lastName, role, photoURL);
+    }
 
+    public Participant getParticipant(int id) {
+        return participantService.readParticipant(id);
     }
 
     public void deleteParticipant(int id) {

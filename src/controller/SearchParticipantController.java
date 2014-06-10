@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Rick on 6/8/2014.
  */
-public class SearchParticipantController implements TableModelListener {
+public class SearchParticipantController {
     private SearchParticipantView view;
  	private EntityManagerFactory entityManagerFactory;
 	private EntityManager entityManager;
@@ -28,32 +28,15 @@ public class SearchParticipantController implements TableModelListener {
 		this.participantService = new ParticipantService(entityManager) ;
 	}
 
-    public Participant addParticipant(String firstName, String lastName, Role role, String photoURL) {
-        return participantService.createParticipant(firstName, lastName, role, photoURL);
-    }
-
-    public void editParticipant() {
-
-    }
-
     public List<Participant> getAllParticipants() {
         return participantService.readAll();
     }
 
-    public void deleteParticipant(int id) {
-        participantService.deleteParticipant(id);
+    public Participant getParticipant(int id) {
+        return participantService.readParticipant(id);
     }
 
-    @Override
-    public void tableChanged(TableModelEvent e) {
-        if (e.getColumn() < 0)
-            return;
-
-        if (e.getType() == TableModelEvent.UPDATE) {
-            int row = e.getFirstRow();
-            Participant p = view.getParticipantList().get(row);
-            p = participantService.updateParticipant(p.getId(), p.getFirstName(), p.getLastName(), p.getRole(), p.getPhotoURL());
-            view.getParticipantList().set(row, p);
-        }
+    public void deleteParticipant(int id) {
+        participantService.deleteParticipant(id);
     }
 }

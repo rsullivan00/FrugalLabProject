@@ -1,5 +1,8 @@
 package view;
  
+import model.Participant;
+import model.Role;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -22,18 +25,16 @@ import javax.swing.JOptionPane;
 public class StartUpView extends javax.swing.JFrame {
     private LoginView loginView = new LoginView();
     private ProjectView projectView = new ProjectView();
-    private ParticipantView participantView = new ParticipantView();
+    private ParticipantView participantView;
     private CategoryView cv = new CategoryView();
     
-    private boolean isAdminMode = false;
+    private static boolean adminMode = false;
     
-    
-    public boolean isAdminMode() {
-		return isAdminMode;
+    public static boolean isAdminMode() {
+		return adminMode;
 	}
-	public void setAdminMode(boolean isAdminMode) {
-		this.isAdminMode = isAdminMode;
-		changeMode(isAdminMode);
+	public static void setAdminMode(boolean isAdminMode) {
+		StartUpView.adminMode = isAdminMode;
 	}
 	/**
      * Creates new form StartUpView
@@ -342,6 +343,7 @@ public class StartUpView extends javax.swing.JFrame {
 
     private void btnAddParticipantActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         removeAllInternalFrame();
+        participantView = new ParticipantView();
         desktop.add(participantView);
         participantView.setVisible(true);
     }

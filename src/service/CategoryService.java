@@ -30,14 +30,14 @@ public class CategoryService {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
         Category category = new Category();
- 	    category.setCategoryName(Category);
+        category.setCategoryName(Category);
 
- 	    manager.persist(category);
+        manager.persist(category);
 
         transaction.commit();
- 	    return category;
+        return category;
     }
-    
+
     // method to read a record
      public Category readCategory(int id) {
     	 Category category = manager.find(Category.class, id);
@@ -70,8 +70,8 @@ public class CategoryService {
     public void deleteCategory(int id) {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
-    	Category participant = manager.find(Category.class, id);
-    	if (participant != null) {
+    	Category category = manager.find(Category.class, id);
+    	if (category != null) {
     	    manager.remove(category);
     	}
         transaction.commit();

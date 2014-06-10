@@ -25,7 +25,7 @@ public class ParticipantService {
 	}
 	 
     // method to create a new record
-    public Participant createParticipant(String firstName, String lastName, Role role, String photoURL) {
+    public Participant createParticipant(String firstName, String lastName, int role, String photoURL) {
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
         Participant participant = new Participant();
@@ -54,7 +54,7 @@ public class ParticipantService {
      }
      
     // method to update a record
-     public Participant updateParticipant(int id, String firstName, String lastName, Role role, String photoURL) {
+     public Participant updateParticipant(int id, String firstName, String lastName, int role, String photoURL) {
          EntityTransaction transaction = manager.getTransaction();
          transaction.begin();
     	 Participant participant = manager.find(Participant.class, id);

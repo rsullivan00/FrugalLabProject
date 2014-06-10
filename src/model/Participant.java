@@ -25,10 +25,9 @@ public class Participant implements Serializable {
   
   @Column(name = "last_name")
   private String lastName;
-
-  @ManyToOne(fetch=FetchType.LAZY)
-  @JoinColumn(name = "role")
-  private Role role;
+  
+  @Column(name = "role")
+  private int role;
 
   @Column(name = "participant_photo_url")
   private String photoURL;
@@ -42,7 +41,7 @@ public class Participant implements Serializable {
     public Participant() {
     }
 
-    public Participant(String firstName, String lastName, Role role, String photoURL) {
+    public Participant(String firstName, String lastName, int role, String photoURL) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
@@ -63,7 +62,7 @@ public class Participant implements Serializable {
 	   else if (i == 2) 
 		   return getLastName();
 	   else if (i == 3)
-		   return getRole().getName();
+		   return Integer.toString(getRole());
        else if (i == 4)
            return getPhotoURL();
 	   else
@@ -98,7 +97,7 @@ public class Participant implements Serializable {
 	   else if (i == 2) 
 		   lastName =  (String) value;
 	   else if (i == 3)
-		   role = new Role(Integer.parseInt((String) value));
+		   role = Integer.parseInt((String) value);
        else if (i == 4)
            photoURL = (String) value;
 	   else
@@ -111,7 +110,7 @@ public class Participant implements Serializable {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", role=" + role.toString() +
+                ", role=" + role +
                 ", photoURL='" + photoURL + '\'' +
                 ", projects=" + projects +
                 '}';
@@ -141,11 +140,11 @@ public class Participant implements Serializable {
         this.lastName = participant_last_name;
     }
 
-    public Role getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setRole(Role participant_role) {
+    public void setRole(int participant_role) {
 
         this.role = participant_role;
     }
