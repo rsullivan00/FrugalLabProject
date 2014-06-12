@@ -109,7 +109,7 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         lblPhotoURL.setMinimumSize(new java.awt.Dimension(240, 16));
         lblPhotoURL.setPreferredSize(new java.awt.Dimension(240, 16));
 
-        btnAddProj.setText("Add Project");
+        btnAddProj.setText("Add to Project");
         btnAddProj.setFocusable(false);
         btnAddProj.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -275,6 +275,9 @@ public class ParticipantView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnDeleteParticipantActionPerformed
 
     private void btnSaveParticipantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveParticipantActionPerformed
+        if (!validateFields()) {
+            return;
+        }
         String firstName = txtFirstName.getText();
         String lastName = txtLastName.getText();
         int role = comboRole.getSelectedIndex();
@@ -286,6 +289,25 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         }
         tryToUpdateSearchPViews();
     }//GEN-LAST:event_btnSaveParticipantActionPerformed
+
+    private boolean validateFields() {
+        String firstName = txtFirstName.getText();
+        if (firstName == "") {
+            JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "First name required");
+            return false;
+        }
+        String lastName = txtLastName.getText();
+        if (lastName == "") {
+            JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Last name required");
+            return false;
+        }
+        int role = comboRole.getSelectedIndex();
+        if (role < 0) {
+            return false;
+        }
+
+        return true;
+    }
 
     private void tryToUpdateSearchPViews() {
         Object parent = this.getParent();
@@ -319,12 +341,13 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnAddImageActionPerformed
 
-    private void btnAddProjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjActionPerformed
-    }//GEN-LAST:event_btnAddProjActionPerformed
-
     private void comboRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboRoleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comboRoleActionPerformed
+
+    private void btnAddProjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjActionPerformed
+
+    }//GEN-LAST:event_btnAddProjActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

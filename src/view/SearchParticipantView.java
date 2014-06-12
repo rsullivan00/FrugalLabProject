@@ -13,13 +13,11 @@ import model.Participant;
 import model.Role;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -29,11 +27,19 @@ import javax.swing.table.TableRowSorter;
 public class SearchParticipantView extends JInternalFrame {
     private SearchParticipantController controller;
     private List<Participant> participantList;
+    private boolean chooseView;
+    private int selectedParticipantID;
 
     /**
      * Creates new form ParticipantView
      */
     public SearchParticipantView() {
+        this(false);
+    }
+
+    public SearchParticipantView(boolean chooseView) {
+        this.chooseView = chooseView;
+        selectedParticipantID = -1; /* Initialized to invalid state */
         controller = new SearchParticipantController(this);
         initComponents();
     }
@@ -210,6 +216,10 @@ public class SearchParticipantView extends JInternalFrame {
         } else {
             columnNames.add("View");
         }
+
+        if (isChooseView()) {
+            columnNames.add("Select");
+        }
         final Vector<Vector> participantData = new Vector<Vector>();
 
         List<Role> roleList = new RoleController().getAllRoles();
@@ -226,6 +236,10 @@ public class SearchParticipantView extends JInternalFrame {
                 rowData.add("Delete");
             } else {
                 rowData.add("View");
+            }
+
+            if (isChooseView()) {
+                rowData.add("Select");
             }
 
             participantData.add(rowData);
@@ -262,6 +276,19 @@ public class SearchParticipantView extends JInternalFrame {
             ButtonColumn deleteButtonColumn = new ButtonColumn(participantTable, delete, 6);
         }
 
+        if (isChooseView()) {
+             Action select = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    JTable table = (JTable) e.getSource();
+                    int modelRow = Integer.valueOf(e.getActionCommand());
+                    setSelectedParticipantID((Integer) table.getValueAt(modelRow, 0));
+                    setVisible(false);
+                }
+            };
+
+            ButtonColumn selectButtonColumn = new ButtonColumn(participantTable, select, 6 + (ProjectProperties.isAdminMode ? 1 : 0));
+        }
+
         return participantTable;
     }
 
@@ -277,6 +304,23 @@ public class SearchParticipantView extends JInternalFrame {
         /* Re-query DB and construct new table */
         participantTable = getParticipantsTable();
         participantScrollPane.setViewportView(participantTable);
+    }
+
+    public boolean isChooseView() {
+        return chooseView;
+    }
+
+    public void setChooseView(boolean chooseView) {
+        this.chooseView = chooseView;
+    }
+
+    public int getSelectedParticipantID() {
+        return selectedParticipantID;
+    }
+
+    public void setSelectedParticipantID(int selectedParticipantID) {
+        firePropertyChange("selectedParticipantID", this.selectedParticipantID, selectedParticipantID);
+        this.selectedParticipantID = selectedParticipantID;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

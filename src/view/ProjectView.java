@@ -4,11 +4,14 @@
  */
 package view;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 /**
  *
  * @author Soumya
  */
-public class ProjectView extends javax.swing.JInternalFrame {
+public class ProjectView extends javax.swing.JInternalFrame implements PropertyChangeListener {
 
     /**
      * Creates new form NewJInternalFrame
@@ -342,7 +345,11 @@ public class ProjectView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnAddProjFilesActionPerformed
 
     private void btnAddProjPartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjPartActionPerformed
-        // TODO add your handling code here:
+        SearchParticipantView view = new SearchParticipantView(true);
+        view.addPropertyChangeListener("selectedParticipantID", this);
+        view.setVisible(true);
+        this.getParent().add(view);
+        view.moveToFront();
     }//GEN-LAST:event_btnAddProjPartActionPerformed
 
     private void btnAddProjCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjCatActionPerformed
@@ -400,5 +407,14 @@ public class ProjectView extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtState;
     private javax.swing.JTextField txtStreetAddress;
     private javax.swing.JTextField txtZipCode;
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        Object source = evt.getSource();
+        if (source instanceof SearchParticipantView) {
+            int selectedID = ((SearchParticipantView) source).getSelectedParticipantID();
+            /* Add participant with corresponding ID now */
+        }
+    }
     // End of variables declaration//GEN-END:variables
 }

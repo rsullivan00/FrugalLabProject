@@ -143,7 +143,7 @@ public class LoginView extends javax.swing.JInternalFrame {
     		txtPassword.setText("");
     		JOptionPane.showMessageDialog(this, "Login Successful!!");
     		this.hide();
-            ProjectProperties.isAdminMode = false;
+            ProjectProperties.isAdminMode = true;
     	}else{
     		lblError1.setText("Invalid Login details.Try again!!");
     		lblError1.setVisible(true);
