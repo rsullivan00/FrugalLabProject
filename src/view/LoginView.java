@@ -1,6 +1,8 @@
 package view;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 
 import controller.LoginController;
 import controller.ProjectController;
@@ -17,11 +19,23 @@ import controller.ProjectProperties;
  */
 public class LoginView extends javax.swing.JInternalFrame {
     private static final LoginController loginController = new LoginController();
+    ProjectProperties prop;
+    private JTabbedPane jTabbedPane;
+    private JButton login;
+    private JButton logout;
+    private JButton setdir;
+    private JButton addProj;
     /**
      * Creates new form LoginForm
      */
-    public LoginView() {
+    public LoginView(JTabbedPane jTabbedPane,JButton login,JButton logout,JButton setdir,JButton addProj) {
         initComponents();
+        this.jTabbedPane = jTabbedPane;
+        this.login = login;
+        this.logout = logout;
+        this.setdir = setdir;
+        this.addProj = addProj;
+        prop = new ProjectProperties();
     }
 
     /**
@@ -43,7 +57,8 @@ public class LoginView extends javax.swing.JInternalFrame {
         lblError1 = new javax.swing.JLabel();
 
         setBorder(null);
-
+        setClosable(true);
+        setResizable(true);
         loginPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Admin Login"));
 
         lblUsername1.setText("Username");
@@ -134,22 +149,25 @@ public class LoginView extends javax.swing.JInternalFrame {
     private void btnAdminLoginActionPerformed(java.awt.event.ActionEvent evt) {    
     	if(txtUserName.getText().trim().equals("")|| txtPassword.getText().trim().equals("")){
     		lblError1.setText("Username and password both are required fileds");
+    		ProjectProperties.isAdminMode = false;
     		lblError1.setVisible(true);
     		
-    		ProjectProperties.isAdminMode = false;
+    		
     	}else if(loginController.validateUser(txtUserName.getText(), txtPassword.getText())){
     		lblError1.setVisible(false);
     		txtUserName.setText("");
     		txtPassword.setText("");
     		JOptionPane.showMessageDialog(this, "Login Successful!!");
     		this.hide();
-            ProjectProperties.isAdminMode = true;
+    		enableAdminMode(true);
+    		ProjectProperties.isAdminMode = true;
     	}else{
     		lblError1.setText("Invalid Login details.Try again!!");
     		lblError1.setVisible(true);
     		txtUserName.setText("");
     		txtPassword.setText("");
-            ProjectProperties.isAdminMode = false;
+    		ProjectProperties.isAdminMode = false;
+    		enableAdminMode(false);
     	}
 
     }                                             
@@ -158,9 +176,18 @@ public class LoginView extends javax.swing.JInternalFrame {
 		lblError1.setVisible(false);
     	txtUserName.setText("");
 		txtPassword.setText("");
-        ProjectProperties.isAdminMode = false;
+		ProjectProperties.isAdminMode = false;
+		enableAdminMode(false);
         this.hide();
-    }                                              
+    }   
+    public void enableAdminMode(boolean val){
+    	jTabbedPane.setEnabledAt(1, val);
+		jTabbedPane.setEnabledAt(2, val);
+		logout.setVisible(val);
+		login.setVisible(!val);
+		setdir.setVisible(val);
+		addProj.setVisible(val);
+    }
 
     // Variables declaration - do not modify                     
     private javax.swing.JButton btnAdminLogin;

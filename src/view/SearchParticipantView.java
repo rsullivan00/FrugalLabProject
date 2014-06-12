@@ -253,7 +253,7 @@ public class SearchParticipantView extends JInternalFrame {
             {
                 JTable table = (JTable)e.getSource();
                 int modelRow = Integer.valueOf( e.getActionCommand() );
-                int id = ((Integer) table.getValueAt(modelRow, 0));
+                final int id = ((Integer) table.getValueAt(modelRow, 0));
                 viewParticipant(id);
             }
         };
@@ -265,7 +265,7 @@ public class SearchParticipantView extends JInternalFrame {
                 public void actionPerformed(ActionEvent e) {
                     JTable table = (JTable) e.getSource();
                     int modelRow = Integer.valueOf(e.getActionCommand());
-                    int id = ((Integer) table.getValueAt(modelRow, 0));
+                    final int id = ((Integer) table.getValueAt(modelRow, 0));
                     /* Update DB */
                     controller.deleteParticipant(id);
                     /* Update table */

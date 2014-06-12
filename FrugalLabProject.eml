@@ -5,5 +5,6 @@
 	<contentEntry url="file://$MODULE_DIR$"/>
 	<levels>
 		<level name="JPA 2.0-2.0" value="project"/>
+		<level name="jfreechart-1.0.17-demo" value="project"/>
 	</levels>
 </component>

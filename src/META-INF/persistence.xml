@@ -2,11 +2,13 @@
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
   <persistence-unit name="PersistenceUnit" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>model.Participant</class>
-    <class>model.Project</class>
-    <class>model.Login</class>
-    <class>model.Role</class>
-    <class>model.Category</class>
+      <class> model.Login </class>
+      <class>model.Role</class>
+      <class>model.Project</class>
+      <class>model.ProjectFile</class>
+      <class>model.Participant</class>
+      <class>model.Category</class>
+      <class>model.ProjectSummary</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/projectDB?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="test"/>

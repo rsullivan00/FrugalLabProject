@@ -1,23 +1,148 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+
+import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+import org.eclipse.persistence.transaction.jotm.JotmTransactionController;
+
+import model.Category;
+import model.Participant;
+import model.Project;
+import model.ProjectFile;
+import controller.FileController;
+import controller.ProjectController;
+import controller.ProjectProperties;
 
 /**
  *
  * @author Soumya
  */
-public class ProjectView extends javax.swing.JInternalFrame implements PropertyChangeListener {
-
+public class ProjectView extends javax.swing.JInternalFrame implements Printable, PropertyChangeListener {
+	private ProjectController projectController;
+	private FileController fileController;
+	Set<String> projectFiles = new HashSet<String>();
+	private ProjectProperties prop = new ProjectProperties();
+	//Variables for adding and updating project dependencies
+	Set<Integer> deletedParticipantIds = new HashSet<Integer>();
+	Set<Integer> deletedCategoryIds = new HashSet<Integer>();
+	Set<Integer> newParticipantIds = new HashSet<Integer>();
+	Set<Integer> newCategoryIds = new HashSet<Integer>();
+	Set<Integer> deletedFileIds = new HashSet<Integer>();
+	List<String> deletedFileNames = new ArrayList<String>();
+	String directoryPath ="";
+	HashMap<String, ProjectFile> p = new HashMap<String, ProjectFile>();
+	private Project project;
+	private JDesktopPane desktop;
+	JTable jt,categoryTable,participantTable;
+	List<Participant> participants;
+	int initCounter;
     /**
      * Creates new form NewJInternalFrame
      */
-    public ProjectView() {
+    public ProjectView(JDesktopPane desktop) {
         initComponents();
+        this.desktop = desktop;
+        projectController = new ProjectController(desktop);
+        fileController = new FileController();
+        projectTableinitializer();
+        loadFileListTable(new ArrayList<ProjectFile>());
+        initCounter =0;
+        btnDeleteProject.setVisible(false);
+        btnPrint.setVisible(false);
+        btnOpenProject.setVisible(false);
+    }
+    
+    public ProjectView(Project project) {
+        initComponents();
+        this.project = project;
+        setProjectValues(project);
+        fileController = new FileController();
+        projectController = new ProjectController(project.getProjectFiles(),desktop);
+        projectTableinitializer();
+        List<ProjectFile> existingFiles = project.getProjectFiles();
+        for(ProjectFile file :existingFiles){
+        	p.put(file.getFileName(), file);
+        }
+        List<ProjectFile> list = new ArrayList<ProjectFile>();
+		    for(String key:p.keySet())
+		    	list.add(p.get(key));
+ 		loadFileListTable(list);
+        participants = new ArrayList<Participant>();
+        participants.addAll(project.getParticipants());
+        loadParticipantListTable(participants);
+        initCounter =0;
+        btnDeleteProject.setVisible(false);
+        btnPrint.setVisible(true);
+    	btnOpenProject.setVisible(true);
+        if(ProjectProperties.isAdminMode){
+        	btnAddProjCat.setVisible(true);
+        	btnAddProjFiles.setVisible(true);
+        	btnAddProjHyperlinks.setVisible(true);
+        	btnSaveProject.setVisible(true);
+        	btnAddProjPart.setVisible(true);
+        }else{
+        	btnAddProjCat.setVisible(false);
+        	btnAddProjFiles.setVisible(false);
+        	btnAddProjHyperlinks.setVisible(false);
+        	btnSaveProject.setVisible(false);
+        	btnAddProjPart.setVisible(false);
+        }
+        	
+    }
+    
+    public void projectTableinitializer(){
+    	jt =  new JTable();
+    	categoryTable = new JTable();
+    	participantTable = new JTable();
+    	JScrollPane scrollpane = new JScrollPane(jt);
+    	projResourcePane.setLayout(new FlowLayout());
+    	projResourcePane.add(scrollpane);
+    	JScrollPane catScrollpane = new JScrollPane(categoryTable);
+    	projCategoryPane.setLayout(new FlowLayout());
+    	projCategoryPane.add(catScrollpane);
+     	JScrollPane pScrollpane = new JScrollPane(participantTable);
+     	projParticipantPane.setLayout(new FlowLayout());
+     	projParticipantPane.add(pScrollpane);
     }
 
     /**
@@ -26,7 +151,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -42,17 +167,20 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
         lblOutcome = new javax.swing.JLabel();
         txtProjectName = new javax.swing.JTextField();
         comboStatus = new javax.swing.JComboBox();
+        startDate = new com.toedter.calendar.JDateChooser();
+        endDate = new com.toedter.calendar.JDateChooser();
         txtStreetAddress = new javax.swing.JTextField();
         txtCity = new javax.swing.JTextField();
         txtCountry = new javax.swing.JTextField();
         txtZipCode = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtAreaOutcome = new javax.swing.JTextArea();
         projectOptionsPanel = new javax.swing.JPanel();
         btnAddProjPart = new javax.swing.JButton();
         btnAddProjCat = new javax.swing.JButton();
         btnAddProjFiles = new javax.swing.JButton();
         btnAddProjHyperlinks = new javax.swing.JButton();
+        btnOpenProject = new javax.swing.JButton();
         btnSaveProject = new javax.swing.JButton();
         btnDeleteProject = new javax.swing.JButton();
         btnPrint = new javax.swing.JButton();
@@ -65,6 +193,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
         projParticipantPane = new javax.swing.JPanel();
 
         setClosable(true);
+        setResizable(true);
 
         basicProjPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Project Details"));
         basicProjPanel.setName(""); // NOI18N
@@ -89,10 +218,11 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
 
         comboStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Active", "Completed", "Suspended", "Aborted" }));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtAreaOutcome.setColumns(20);
+        txtAreaOutcome.setRows(5);
+        jScrollPane1.setViewportView(txtAreaOutcome);
 
+        btnAddProjPart.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\participant.png"));
         btnAddProjPart.setText("Add Participant");
         btnAddProjPart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,6 +230,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
             }
         });
 
+        btnAddProjCat.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\category.png"));
         btnAddProjCat.setText("Add Category");
         btnAddProjCat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -107,6 +238,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
             }
         });
 
+        btnAddProjFiles.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\file.png"));
         btnAddProjFiles.setText("Add Files");
         btnAddProjFiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,6 +246,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
             }
         });
 
+        btnAddProjHyperlinks.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\hyperlink.png"));
         btnAddProjHyperlinks.setText("Add Hyperlinks");
         btnAddProjHyperlinks.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,6 +254,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
             }
         });
 
+        btnSaveProject.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\save.png"));
         btnSaveProject.setText("Save Project");
         btnSaveProject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -128,6 +262,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
             }
         });
 
+        
         btnDeleteProject.setText("Delete Project");
         btnDeleteProject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,10 +270,19 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
             }
         });
 
+        btnPrint.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\print.png"));
         btnPrint.setText("Print Project Profile");
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintActionPerformed(evt);
+            }
+        });
+        
+        btnOpenProject.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\open.png"));
+        btnOpenProject.setText("Open Project Folder");
+        btnOpenProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenProjectActionPerformed(evt);
             }
         });
 
@@ -155,7 +299,8 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
                     .addComponent(btnSaveProject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnDeleteProject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnPrint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAddProjPart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAddProjPart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnOpenProject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         projectOptionsPanelLayout.setVerticalGroup(
@@ -175,12 +320,13 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
                 .addComponent(btnDeleteProject)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnPrint)
+                .addComponent(btnOpenProject)
                 .addContainerGap(95, Short.MAX_VALUE))
         );
 
         lblCity1.setText("State");
 
-        txtProjectId.setEnabled(false);
+        txtProjectId.setVisible(false);
 
         javax.swing.GroupLayout basicProjPanelLayout = new javax.swing.GroupLayout(basicProjPanel);
         basicProjPanel.setLayout(basicProjPanelLayout);
@@ -203,14 +349,17 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
                 .addGap(27, 27, 27)
                 .addGroup(basicProjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtProjectId, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
-                    .addComponent(txtProjectName)
-                    .addComponent(comboStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtStreetAddress)
-                    .addComponent(txtCity)
-                    .addComponent(txtCountry)
-                    .addComponent(txtZipCode)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
-                    .addComponent(txtState))
+                    .addGroup(basicProjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(endDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtProjectName)
+                        .addComponent(comboStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(startDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtStreetAddress)
+                        .addComponent(txtCity)
+                        .addComponent(txtCountry)
+                        .addComponent(txtZipCode)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                        .addComponent(txtState)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                 .addComponent(projectOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(83, 83, 83))
@@ -231,9 +380,13 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
                             .addComponent(lblProjectStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(comboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(basicProjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(basicProjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(endDate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(basicProjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblStreetAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -316,7 +469,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
                 .addContainerGap()
                 .addComponent(basicProjPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(projDependencyTab, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(projDependencyTab, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -338,11 +491,95 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>                        
 
-    private void btnAddProjFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjFilesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAddProjFilesActionPerformed
+    private void btnAddProjFilesActionPerformed(java.awt.event.ActionEvent evt) {                                                
+    	JFileChooser chooser = new JFileChooser();
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+          //open a dialog box to select files 
+          File file = chooser.getSelectedFile();
+          System.out.println(file.getPath());
+
+	          // update the title of the image
+	          System.out.println(file.getName());
+	          ProjectProperties prop = new ProjectProperties();
+	          //Project project = projectController.getProjectById(Integer.parseInt(txtProjectId.getText()));
+  			//Project project = projectController.getProjectById(1);
+	        
+  			String dirPath;
+  			if(project == null){
+  				dirPath = prop.getDirectory(prop.getProjectPath(),"tempProject");
+  				File destinationPath = new File(dirPath);
+  				if(initCounter==0){
+  					for(File previousFiles: destinationPath.listFiles()) 
+  						previousFiles.delete();
+  					initCounter++;
+  				}
+  			}else{
+  				dirPath = project.getProjectLocation();
+  			}
+  			System.out.println(dirPath);
+  			File destinationPath = new File(dirPath);
+  			directoryPath = dirPath;
+  		    if ((destinationPath.isDirectory()) && (file.isFile()))
+  		    //both source and destination paths are available 
+  		    {
+  		        //creating object for File class
+  		        File statusFileNameObject = new File(dirPath + "\\" + file.getName());
+  		        try {
+					Files.copy(file.toPath(), statusFileNameObject.toPath(),StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+  		        
+  		        System.out.println("add file"+file.getName());
+  		        if(p.get(file.getName())==null){
+  		        	p.put(file.getName(),new ProjectFile(0, dirPath, file.getName(), null, null));
+  		        	projectFiles.add(file.getName());
+  		        }
+  		        
+  		    }
+  		    List<ProjectFile> list = new ArrayList<ProjectFile>();
+  		    for(String key:p.keySet())
+  		    	list.add(p.get(key));
+  		  ProjectController pc = new ProjectController(list, desktop);
+  		  loadFileListTable(list);
+  		  
+        }
+    }   
+    
+    public void deleteFile(String fileName,String rootDirectory){
+    	 try{
+    		 
+     		File file = new File(rootDirectory + "\\" + fileName);
+     		List<ProjectFile> list = new ArrayList<ProjectFile>();
+   		    for(String key:p.keySet())
+   		    	list.add(p.get(key));
+     		loadFileListTable(list);
+     		if(file.delete()){
+     			System.out.println(file.getName() + " is deleted!");
+     		}else{
+     			System.out.println("Delete operation is failed.");
+     		}
+  
+     	}catch(Exception e){
+  
+     		e.printStackTrace();
+  
+     	}
+    }
+    private void btnOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    	File projectPath = new File (project.getProjectLocation());
+        Desktop explorer = Desktop.getDesktop();
+        try {
+			explorer.open(projectPath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    } 
 
     private void btnAddProjPartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjPartActionPerformed
         SearchParticipantView view = new SearchParticipantView(true);
@@ -352,27 +589,363 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
         view.moveToFront();
     }//GEN-LAST:event_btnAddProjPartActionPerformed
 
-    private void btnAddProjCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjCatActionPerformed
+    private void btnAddProjCatActionPerformed(java.awt.event.ActionEvent evt) {                                              
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAddProjCatActionPerformed
+    }                                             
 
-    private void btnAddProjHyperlinksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjHyperlinksActionPerformed
+    private void btnAddProjHyperlinksActionPerformed(java.awt.event.ActionEvent evt) {                                                     
+    	showAddHyperlink();
+    }                                                    
+
+    private void btnSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    	if(returnNullIfEmpty(txtProjectName.getText())==null){
+    		JOptionPane.showMessageDialog(this, "Enter project name");
+    	}else if(returnNullIfEmpty(txtZipCode.getText())!=null){
+    		try { 
+    	        Integer.parseInt(txtZipCode.getText()); 
+    	        if(txtProjectId.getText().equals("")){
+    	    		Project project = projectController.addNewProject(txtProjectName.getText(), comboStatus.getSelectedItem().toString(), returnNullIfEmpty(txtAreaOutcome.getText()),returnNullIfEmpty(txtState.getText()), returnNullIfEmpty(txtStreetAddress.getText()), returnNullIfEmpty(txtCity.getText()), returnNullIfEmpty(txtCountry.getText()), returnNullIfEmpty(txtZipCode.getText())==null?null:Integer.parseInt(txtZipCode.getText()), startDate.getDate(), endDate.getDate(),prop.getProjectPath(),projectFiles,newParticipantIds,newCategoryIds);
+    	    		createFinalProjectDir(project.getProjectID(), project.getProjectName());
+    	    		JOptionPane.showMessageDialog(this, "Project Saved");
+    	    		this.hide();
+        		}else{
+        			System.out.println("before update"+deletedFileIds.size());
+        			System.out.println("before update"+projectFiles.size());
+        			Project project = projectController.updateProject(Integer.parseInt(txtProjectId.getText()),txtProjectName.getText(), comboStatus.getSelectedItem().toString(), returnNullIfEmpty(txtAreaOutcome.getText()),returnNullIfEmpty(txtState.getText()), returnNullIfEmpty(txtStreetAddress.getText()), returnNullIfEmpty(txtCity.getText()), returnNullIfEmpty(txtCountry.getText()), returnNullIfEmpty(txtZipCode.getText())==null?null:Integer.parseInt(txtZipCode.getText()), startDate.getDate(), endDate.getDate(),directoryPath,projectFiles,deletedFileIds,deletedParticipantIds,newParticipantIds,deletedCategoryIds,newCategoryIds);
+        			System.out.println("after update "+project.getProjectFiles().size());
+        			for(String filename :deletedFileNames){
+        				try{
+        		    		 
+        		     		File file = new File(directoryPath + "\\" + filename);
+        		     		if(file.delete()){
+        		     			System.out.println(file.getName() + " is deleted!");
+        		     		}else{
+        		     			System.out.println("Delete operation is failed.");
+        		     		}
+        		  
+        		     	}catch(Exception e){
+        		  
+        		     		e.printStackTrace();
+        		  
+        		     	}
+        			}
+        			JOptionPane.showMessageDialog(this, "Project Updated");
+    	    		this.hide();
+    	    	}
+    	    } catch(NumberFormatException e) { 
+    	    	JOptionPane.showMessageDialog(this, "Enter number for zip code");
+    	    }
+    		
+    	}else{
+    		if(txtProjectId.getText().equals("")){
+	    		Project project = projectController.addNewProject(txtProjectName.getText(), comboStatus.getSelectedItem().toString(), returnNullIfEmpty(txtAreaOutcome.getText()),returnNullIfEmpty(txtState.getText()), returnNullIfEmpty(txtStreetAddress.getText()), returnNullIfEmpty(txtCity.getText()), returnNullIfEmpty(txtCountry.getText()), returnNullIfEmpty(txtZipCode.getText())==null?null:Integer.parseInt(txtZipCode.getText()), startDate.getDate(), endDate.getDate(),prop.getProjectPath(),projectFiles,newParticipantIds,newCategoryIds);
+	    		createFinalProjectDir(project.getProjectID(), project.getProjectName());
+	    		JOptionPane.showMessageDialog(this, "Project Saved");
+	    		this.hide();
+    		}else{
+    			System.out.println("before update"+deletedFileIds.size());
+    			System.out.println("before update"+projectFiles.size());
+    			Project project = projectController.updateProject(Integer.parseInt(txtProjectId.getText()),txtProjectName.getText(), comboStatus.getSelectedItem().toString(), returnNullIfEmpty(txtAreaOutcome.getText()),returnNullIfEmpty(txtState.getText()), returnNullIfEmpty(txtStreetAddress.getText()), returnNullIfEmpty(txtCity.getText()), returnNullIfEmpty(txtCountry.getText()), returnNullIfEmpty(txtZipCode.getText())==null?null:Integer.parseInt(txtZipCode.getText()), startDate.getDate(), endDate.getDate(),directoryPath,projectFiles,deletedFileIds,deletedParticipantIds,newParticipantIds,deletedCategoryIds,newCategoryIds);
+    			System.out.println("after update "+project.getProjectFiles().size());
+    			JOptionPane.showMessageDialog(this, "Project Updated");
+	    		this.hide();
+	    	}
+    	}
+
+    }  
+    
+    public void updateProjectDir(){
+    	
+    }
+
+    private void btnDeleteProjectActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAddProjHyperlinksActionPerformed
+    }                                                
 
-    private void btnSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProjectActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSaveProjectActionPerformed
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    	PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPrintable(this);
+        boolean ok = job.printDialog();
+        if (ok) {
+            try {
+                 job.print();
+            } catch (PrinterException ex) {
+            
+            }
+        }
+    }  
+    
+    public String returnNullIfEmpty(String value){
+    	return value.trim().equals("")?null:value;
+    }
+    public void loadFileListTable(List<ProjectFile> flist){
+    	jt.setModel(getProjectFileTable(flist));
+    	 if (ProjectProperties.isAdminMode) {
+             Action delete = new AbstractAction() {
+                 public void actionPerformed(ActionEvent e) {
+                     JTable table = (JTable) e.getSource();
+                     int modelRow = Integer.valueOf(e.getActionCommand());
+                     int id = ((Integer) table.getValueAt(modelRow, 0));
+                     String filename = ((String) table.getValueAt(modelRow, 2));
+                     System.out.println("delete file called "+id);
+                     if(id!=0){
+                      	deletedFileIds.add(id);
+                      	deletedFileNames.add(filename);
+                      	System.out.println("deleted file "+deletedFileIds.size());
+                     }else{
+                     	projectFiles.remove(filename);
+                     }
+                     deleteFile(filename,p.get(filename).getFilePath());
+                     ((DefaultTableModel) table.getModel()).removeRow(modelRow);
+                 }
+             };
 
-    private void btnDeleteProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteProjectActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDeleteProjectActionPerformed
+             ButtonColumn deleteButtonColumn = new ButtonColumn(jt, delete, 4);
+         }
+    	System.out.println(flist.size());
+    }
+    
+    public DefaultTableModel getProjectFileTable(List<ProjectFile> flist){
+        Vector<String> columnNames = new Vector<String>();
+        columnNames.add("ID");
+        columnNames.add("Path");
+        columnNames.add("Name");
+        columnNames.add("Type");
+        if (ProjectProperties.isAdminMode) {
+            columnNames.add("Delete");
+        }
+        final Vector<Vector> projectFileList = new Vector<Vector>();
 
-    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPrintActionPerformed
+        for(final ProjectFile file: flist){
+            Vector<Object> rowData = new Vector<Object>();
+            rowData.add(file.getFileID());
+            rowData.add(file.getFilePath());
+            rowData.add(file.getFileName());
+            rowData.add(file.getFileType());
+            if(ProjectProperties.isAdminMode){
+                rowData.add("Delete");
+            } 
+            projectFileList.add(rowData);
+        }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+        DefaultTableModel model = new DefaultTableModel(projectFileList, columnNames);
+        return model;
+    }
+    
+    public void loadCategoryListTable(List<ProjectFile> flist){
+    	categoryTable.setModel(getProjectFileTable(flist));
+    	 if (ProjectProperties.isAdminMode) {
+             Action delete = new AbstractAction() {
+                 public void actionPerformed(ActionEvent e) {
+                     JTable table = (JTable) e.getSource();
+                     int modelRow = Integer.valueOf(e.getActionCommand());
+                     int id = ((Integer) table.getValueAt(modelRow, 0));
+                     if(id!=0){
+                    	 deletedCategoryIds.add(id);
+                    	 p.remove(((String) table.getValueAt(modelRow, 2)));
+                     }else{
+                     	projectFiles.remove(((String) table.getValueAt(modelRow, 2)));
+                     	p.remove(((String) table.getValueAt(modelRow, 2)));
+                     	System.out.println("file number"+p.size());
+                     	deleteFile(((String) table.getValueAt(modelRow, 2)),prop.getDirectory(prop.getProjectPath(),"tempProject"));
+                     }
+                     ((DefaultTableModel) table.getModel()).removeRow(modelRow);
+                 }
+             };
+
+             ButtonColumn deleteButtonColumn = new ButtonColumn(categoryTable, delete, 2);
+         }
+    	System.out.println(flist.size());
+    }
+    
+    public DefaultTableModel getCategoryTable(List<Category> list){
+        Vector<String> columnNames = new Vector<String>();
+        columnNames.add("ID");
+        columnNames.add("Name");
+        if (ProjectProperties.isAdminMode) {
+            columnNames.add("Delete");
+        }
+        final Vector<Vector> vlist = new Vector<Vector>();
+
+        for(final Category c: list){
+            Vector<Object> rowData = new Vector<Object>();
+            rowData.add(c.getId());
+            rowData.add(c.getCategoryName());
+            if(ProjectProperties.isAdminMode){
+                rowData.add("Delete");
+            } 
+            vlist.add(rowData);
+        }
+
+        DefaultTableModel model = new DefaultTableModel(vlist, columnNames);
+        return model;
+    }
+    
+    public void loadParticipantListTable(List<Participant> list){
+    	participantTable.setModel(getParticipantTable(list));
+    	 if (ProjectProperties.isAdminMode) {
+             Action delete = new AbstractAction() {
+                 public void actionPerformed(ActionEvent e) {
+                     JTable table = (JTable) e.getSource();
+                     int modelRow = Integer.valueOf(e.getActionCommand());
+                     int id = ((Integer) table.getValueAt(modelRow, 0));
+                     if(id!=0){
+                     }else{
+                     	projectFiles.remove(((String) table.getValueAt(modelRow, 2)));
+                     	deleteFile(((String) table.getValueAt(modelRow, 2)),prop.getDirectory(prop.getProjectPath(),"tempProject"));
+                     }
+                     ((DefaultTableModel) table.getModel()).removeRow(modelRow);
+                 }
+             };
+
+             ButtonColumn deleteButtonColumn = new ButtonColumn(participantTable, delete, 4);
+         }
+    	System.out.println(list.size());
+    }
+    
+    public DefaultTableModel getParticipantTable(List<Participant> list){
+        Vector<String> columnNames = new Vector<String>();
+        columnNames.add("ID");
+        columnNames.add("First Name");
+        columnNames.add("Last Name");
+        columnNames.add("Role");
+        if (ProjectProperties.isAdminMode) {
+            columnNames.add("Delete");
+        }
+        final Vector<Vector> vlist = new Vector<Vector>();
+
+        for(final Participant p: list){
+            Vector<Object> rowData = new Vector<Object>();
+            rowData.add(p.getId());
+            rowData.add(p.getFirstName());
+            rowData.add(p.getLastName());
+            rowData.add(p.getRole());
+            if(ProjectProperties.isAdminMode){
+                rowData.add("Delete");
+            } 
+            vlist.add(rowData);
+        }
+
+        DefaultTableModel model = new DefaultTableModel(vlist, columnNames);
+        return model;
+    }
+    
+    
+    public int print(Graphics g, PageFormat pf, int page) throws
+    PrinterException {
+
+		if (page > 0) {
+			return NO_SUCH_PAGE;
+		}
+		BufferedImage picture = null;
+	    try {
+	      picture = ImageIO.read(new File(prop.getAbsolutePath()+"\\images\\frigal_logo.jpg"));
+	    } catch (IOException e) {    
+	      System.out.println("An error has occurred while reading image file. Check that file exists and is in the correct directory.");
+	       System.exit(1);
+	    }
+		
+		/* User (0,0) is typically outside the imageable area, so we must
+		* translate by the X and Y values in the PageFormat to avoid clipping
+		*/
+		Graphics2D g2d = (Graphics2D)g;
+		g2d.translate(pf.getImageableX(), pf.getImageableY());
+		
+		/* Now we perform our rendering */
+		g.setFont(new Font("TimesRoman", Font.BOLD, 16));
+		int x = (int)(pf.getImageableWidth()/4);
+		int y = 150;
+		g.drawImage(picture,x, 50,null);
+		g.drawString("Project Profile", x, y);
+		g.setFont(new Font("TimesRoman", Font.PLAIN, 14));
+		x = 100;
+		//Project project = projectController.getProjectById(Integer.parseInt(txtProjectId.getText()));
+		g.drawString("Project Name :", x, y+=30);
+		g.drawString(project.getProjectName(), 200, y);
+		g.drawString("Status :", x, y+=30);
+		g.drawString(project.getStatus(), 200, y);
+		g.drawString("Start Date :", x, y+=30);
+		g.drawString((project.getStartDate()==null?"Not available":project.getStartDate())+"",200, y);
+		g.drawString("End Date :", x, y+=30);
+		g.drawString((project.getEndDate()==null?"Not available":project.getEndDate())+"", 200, y);
+		if(project.getParticipants()!=null){
+			g.drawString("Participants : ", x, y+=40);
+			for(Participant p :project.getParticipants()){
+				g.drawString(p.getFirstName()+" "+p.getLastName(), x, y+=20);
+			}
+		}
+		
+		/* tell the caller that this page is part of the printed document */
+		return PAGE_EXISTS;
+	}
+    
+    public void createFinalProjectDir(int projectId,String projectName){
+    	ProjectProperties prop = new ProjectProperties();
+		String sourceDirPath = prop.getDirectory(prop.getProjectPath(),"tempProject");
+		File dir = new File(sourceDirPath);  
+        File destDir = new File(prop.getDirectory(prop.getProjectPath(),projectName+"_"+projectId));  
+        if ( dir.isDirectory() && destDir.isDirectory()) { 
+        	destDir.delete();
+                dir.renameTo(destDir);  
+                System.out.println("renamed");
+        }
+    }
+
+    public void setProjectValues(Project proj){
+    	txtProjectId.setText(Integer.toString(proj.getProjectID()));
+    	txtProjectName.setText(proj.getProjectName());
+    	comboStatus.setSelectedItem(proj.getStatus());
+    	startDate.setDate(proj.getStartDate()!=null?new Date(proj.getStartDate().getTime()):null);
+    	endDate.setDate(proj.getEndDate()!=null?new Date(proj.getEndDate().getTime()):null);
+    	txtState.setText(proj.getState());
+    	txtStreetAddress.setText(proj.getStreetAddress());
+    	txtCity.setText(proj.getCity());
+    	txtCountry.setText(proj.getCountry());
+    	txtZipCode.setText(proj.getZipCode()!=null?Integer.toString(proj.getZipCode()):null);
+    }
+    
+    public void showAddHyperlink(){
+       
+        String result = JOptionPane.showInputDialog(this, "Hyperlink","Enter Hyperlink");
+        if (result != null) {
+        	
+           System.out.println("y value: " + result);
+           if(isValidURL(result)){
+        	   projectFiles.add("#"+result);
+        	   p.put(result,new ProjectFile(0, "", result, "hyperlink", null));
+       		 	List<ProjectFile> list = new ArrayList<ProjectFile>();
+     		    for(String key:p.keySet())
+     		    	list.add(p.get(key));
+       		loadFileListTable(list);
+           }else
+        	   
+        	   JOptionPane.showMessageDialog(this, "Invalid hyperlink.Retry!!");
+        	}
+    }
+    public boolean isValidURL(String url){
+    	 URL u = null;
+         try {
+             u = new URL(url);
+         } catch (MalformedURLException e) {
+             return false;
+         }
+         try {
+             u.toURI();
+         } catch (URISyntaxException e) {
+             return false;
+         }
+         return true;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        Object source = evt.getSource();
+        if (source instanceof SearchParticipantView) {
+            int selectedID = ((SearchParticipantView) source).getSelectedParticipantID();
+            /* Add participant with corresponding ID now */
+        }
+    }
+    // Variables declaration - do not modify                     
     private javax.swing.JPanel basicProjPanel;
     private javax.swing.JButton btnAddProjCat;
     private javax.swing.JButton btnAddProjFiles;
@@ -382,10 +955,12 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSaveProject;
     private javax.swing.JComboBox comboStatus;
+    private javax.swing.JButton btnOpenProject;
+    private com.toedter.calendar.JDateChooser endDate;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea txtAreaOutcome;
     private javax.swing.JLabel lblCity;
     private javax.swing.JLabel lblCity1;
     private javax.swing.JLabel lblCountry;
@@ -400,6 +975,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
     private javax.swing.JPanel projParticipantPane;
     private javax.swing.JPanel projResourcePane;
     private javax.swing.JPanel projectOptionsPanel;
+    private com.toedter.calendar.JDateChooser startDate;
     private javax.swing.JTextField txtCity;
     private javax.swing.JTextField txtCountry;
     private javax.swing.JTextField txtProjectId;
@@ -407,14 +983,5 @@ public class ProjectView extends javax.swing.JInternalFrame implements PropertyC
     private javax.swing.JTextField txtState;
     private javax.swing.JTextField txtStreetAddress;
     private javax.swing.JTextField txtZipCode;
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        Object source = evt.getSource();
-        if (source instanceof SearchParticipantView) {
-            int selectedID = ((SearchParticipantView) source).getSelectedParticipantID();
-            /* Add participant with corresponding ID now */
-        }
-    }
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }

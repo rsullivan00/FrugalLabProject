@@ -1,17 +1,21 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JButton;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JDesktopPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import model.Project;
 import controller.ProjectController;
+import controller.ProjectProperties;
+import controller.SearchProjectController;
 
 /*
  * To change this template, choose Tools | Templates
@@ -23,19 +27,76 @@ import controller.ProjectController;
  * @author Soumya
  */
 public class SearchProjectView extends javax.swing.JInternalFrame {
-	private ProjectController projectController = new ProjectController();
+	private ProjectController projectController;
+	private SearchProjectController searchProjectController;
+	private ProjectProperties properties = new ProjectProperties();
+	private JDesktopPane desktop;
+	private ProjectView pv;
+	JTable jt;
+	
     /**
      * Creates new form SearchProjectView
      */
-    public SearchProjectView() {
+    public SearchProjectView(JDesktopPane desktop) {
         initComponents();
-        JTable jt = getProjectsListTable(projectController.getAllProjectList());
+        this.desktop = desktop;
+        searchProjectController = new SearchProjectController(desktop);
+        projectController = new ProjectController(desktop);
+        jt = new JTable();
+        jt.setModel(getProjectTable(projectController.getAllProjectList()));
     	JScrollPane scrollpane = new JScrollPane(jt);
     	projectListTable.setLayout(new BorderLayout());
     	projectListTable.add(scrollpane, BorderLayout.CENTER);
-    	TableCellRenderer buttonRenderer = new JTableButtonRenderer();
-        jt.getColumn("View/Edit").setCellRenderer(buttonRenderer);
-        jt.getColumn("Delete").setCellRenderer(buttonRenderer);
+    	Action view = new AbstractAction() {
+            public void actionPerformed(ActionEvent e)
+            {
+                JTable table = (JTable)e.getSource();
+                int modelRow = Integer.valueOf( e.getActionCommand() );
+                int id = ((Integer) table.getValueAt(modelRow, 0));
+                showProjectView(id);
+            }
+        };
+
+        ButtonColumn viewButtonColumn = new ButtonColumn(jt, view, 6);
+
+        if (ProjectProperties.isAdminMode) {
+            Action delete = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    JTable table = (JTable) e.getSource();
+                    int modelRow = Integer.valueOf(e.getActionCommand());
+                    int id = ((Integer) table.getValueAt(modelRow, 0));
+                    /* Update DB */
+                    deleteProject(id);
+                    /* Update table */
+                    ((DefaultTableModel) table.getModel()).removeRow(modelRow);
+                }
+            };
+
+            ButtonColumn deleteButtonColumn = new ButtonColumn(jt, delete, 7);
+        }
+    	/*Action delete = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("action performed ");
+				 JTable table = (JTable)e.getSource();
+		         int modelRow = Integer.valueOf( e.getActionCommand() );
+		         ((DefaultTableModel)table.getModel()).removeRow(modelRow);
+				
+			}
+		};
+		 
+		 Action view = new AbstractAction()
+		 {
+		     public void actionPerformed(ActionEvent e)
+		     {
+		    	 JTable table = (JTable)e.getSource();
+		         int modelRow = Integer.valueOf( e.getActionCommand() );
+		         ((DefaultTableModel)table.getModel()).removeRow(modelRow);
+		     }
+		 };
+		 if(ProjectProperties.isAdminMode) { 
+			 ButtonColumn deleteColumn = new ButtonColumn(jt, delete, 7);
+		 }
+		 ButtonColumn viewColumn = new ButtonColumn(jt, view, 6);*/
     }
 
     /**
@@ -58,7 +119,8 @@ public class SearchProjectView extends javax.swing.JInternalFrame {
         jDateChooser1.setVisible(false);
 
         projectListPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Project List"));
-
+        setClosable(true);
+        setResizable(true);
         javax.swing.GroupLayout projectListTableLayout = new javax.swing.GroupLayout(projectListTable);
         projectListTable.setLayout(projectListTableLayout);
         projectListTableLayout.setHorizontalGroup(
@@ -97,14 +159,14 @@ public class SearchProjectView extends javax.swing.JInternalFrame {
             }
         });
 
-        comboSearchBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Project Name", "Status", "Start Date", "End Date", "Participant Name", "Participant Role", "Category" }));
+        comboSearchBy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Project Name", "Status", "Start Date", "End Date", "Participant Name", "Participant Role", "Category","All" }));
         comboSearchBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboSearchByActionPerformed(evt);
             }
         });
 
-        btnSearchProjects.setIcon(new javax.swing.ImageIcon("C:\\Users\\Soumya\\workspace\\FrugalLabProject\\FrugalLabProject\\src\\images\\search.png")); // NOI18N
+        btnSearchProjects.setIcon(new javax.swing.ImageIcon(properties.getAbsolutePath()+"\\src\\images\\search.png"));
         btnSearchProjects.setText("Search");
         btnSearchProjects.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -185,56 +247,115 @@ public class SearchProjectView extends javax.swing.JInternalFrame {
     }                                             
 
     private void btnSearchProjectsActionPerformed(java.awt.event.ActionEvent evt) { 
-    	
-    } 
-    
-    public JTable getProjectsListTable(List<Project> projectList){
-    	Vector<String> columnNames = new Vector<String>();
-    	columnNames.add("Project Name");
-    	columnNames.add("Status");
-    	columnNames.add("Start Date");
-    	columnNames.add("End Date");
-    	columnNames.add("Outcome");
-    	columnNames.add("Location");
-    	columnNames.add("View/Edit");
-    	columnNames.add("Delete");
-    	Vector<Vector> projectsData = new Vector<Vector>();
-    	for(Project project:projectList){
-    		Vector<Object> projData = new Vector<Object>();
-    		projData.add(project.getProjectName());
-    		projData.add(project.getStatus());
-    		projData.add(project.getStartDate());
-    		projData.add(project.getEndDate());
-    		projData.add(project.getOutcome());
-    		projData.add(project.getCountry());
-			final int id = project.getProjectID();
-    		if(true){
-    			JButton viewBtn = new JButton("View/Edit");
-    			viewBtn.addActionListener(new java.awt.event.ActionListener() {
-    	            public void actionPerformed(java.awt.event.ActionEvent evt) {
-    	            	viewProject(id);
-    	            }
-    	        });
-    			projData.add(viewBtn);
-    			JButton deleteBtn = new JButton("Delete");
-    			deleteBtn.addActionListener(new java.awt.event.ActionListener() {
-    	            public void actionPerformed(java.awt.event.ActionEvent evt) {
-    	            	deleteProject(id);
-    	            }
-    	        });
-    			projData.add(deleteBtn);
-    		}
-    		projectsData.add(projData);
+    	int searchCase = comboSearchBy.getSelectedIndex();
+    	System.out.println(searchCase);
+    	switch(searchCase){
+    		case 0:
+    			loadProjectListTable(searchProjectController.searchProjectByName(txtSearchCriteria.getText()));
+    			break;
+    		case 1:
+    			loadProjectListTable(searchProjectController.searchProjectByStatus(txtSearchCriteria.getText()));
+    			break;
+			case 2:
+				loadProjectListTable(searchProjectController.searchProjectByDate(jDateChooser1.getDate(),true));
+				break;
+			case 3:
+				loadProjectListTable(searchProjectController.searchProjectByDate(jDateChooser1.getDate(),false));
+				break;
+			case 4:
+				loadProjectListTable(searchProjectController.searchProjectByParticipantName(txtSearchCriteria.getText()));
+				break;
+			case 5:
+				loadProjectListTable(searchProjectController.searchProjectByCategory(txtSearchCriteria.getText()));
+				break;
+			default :
+				loadProjectListTable(projectController.getAllProjectList());
     	}
-    	JTable projectTable = new JTable(projectsData, columnNames);
-    	return projectTable;
+    } 
+  
+    
+    public void loadProjectListTable(List<Project> plist){
+    	jt.setModel(getProjectTable(plist));
+    	Action view = new AbstractAction() {
+            public void actionPerformed(ActionEvent e)
+            {
+                JTable table = (JTable)e.getSource();
+                int modelRow = Integer.valueOf( e.getActionCommand() );
+                int id = ((Integer) table.getValueAt(modelRow, 0));
+                showProjectView(id);
+            }
+        };
+
+        ButtonColumn viewButtonColumn = new ButtonColumn(jt, view, 6);
+
+        if (ProjectProperties.isAdminMode) {
+            Action delete = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    JTable table = (JTable) e.getSource();
+                    int modelRow = Integer.valueOf(e.getActionCommand());
+                    int id = ((Integer) table.getValueAt(modelRow, 0));
+                    /* Update DB */
+                    deleteProject(id);
+                    /* Update table */
+                    ((DefaultTableModel) table.getModel()).removeRow(modelRow);
+                }
+            };
+
+            ButtonColumn deleteButtonColumn = new ButtonColumn(jt, delete, 7);
+        }
+    	System.out.println(plist.size());
     }
-    public void viewProject(Integer id){
-    	
+    public DefaultTableModel getProjectTable(List<Project> plist){
+        Vector<String> columnNames = new Vector<String>();
+        columnNames.add("ID");
+        columnNames.add("Name");
+        columnNames.add("Status");
+        columnNames.add("Start Date");
+        columnNames.add("End Date");
+        columnNames.add("Location");
+        if (ProjectProperties.isAdminMode) {
+            columnNames.add("View/Edit");
+            columnNames.add("Delete");
+        } else {
+            columnNames.add("View");
+        }
+        final Vector<Vector> projectList = new Vector<Vector>();
+
+        for(final Project project: plist){
+            Vector<Object> rowData = new Vector<Object>();
+            rowData.add(project.getProjectID());
+            rowData.add(project.getProjectName());
+            rowData.add(project.getStatus());
+            rowData.add(project.getStartDate());
+            rowData.add(project.getEndDate());
+            rowData.add(project.getCountry());
+            if(ProjectProperties.isAdminMode){
+                rowData.add("View/Edit");
+                rowData.add("Delete");
+            } else {
+                rowData.add("View");
+            }
+
+            projectList.add(rowData);
+        }
+
+        DefaultTableModel model = new DefaultTableModel(projectList, columnNames);
+        return model;
     }
-    public void deleteProject(Integer id){
-    	
-    }
+    public void showProjectView(int id){
+		 System.out.println("view "+id);
+		 Project project = projectController.getProjectDetailsById(id);
+		 System.out.println();
+		 ProjectView projectView = new ProjectView(project);
+		 this.getParent().add(projectView);
+		 projectView.show();
+	 }
+	 
+	 public void deleteProject(int id){
+		 System.out.println("delete "+id);
+		 System.out.println(projectController.deleteProjectById(id));
+		 //searchProjectController.updateTableModel(projectService.getAllProjects());
+	 }
     // Variables declaration - do not modify                     
     private javax.swing.JButton btnSearchProjects;
     private javax.swing.JComboBox comboSearchBy;

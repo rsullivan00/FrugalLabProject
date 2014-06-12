@@ -57,7 +57,7 @@ public class Login implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Login{" +
+        return "Model.Login{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';

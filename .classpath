@@ -9,5 +9,8 @@
 	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/beansbinding-1.2.1.jar"/>
 	<classpathentry kind="lib" path="/Users/Jorge/Desktop/eclipselink/jlib/jpa/javax.persistence_2.1.0.v201304241213.jar"/>
 	<classpathentry kind="lib" path="/Users/Jorge/Desktop/mysql-connector-java-5.1.30/mysql-connector-java-5.1.30-bin.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jfreechart-1.0.17-demo"/>
+	<classpathentry kind="var" path="USER_HOME/Downloads/jfreechart-1.0.17/jfreechart-1.0.17/jfreechart-1.0.17-demo.jar"/>
+	<classpathentry exported="true" kind="var" path="USER_HOME/Downloads/jfreechart-1.0.17/jfreechart-1.0.17/lib/jfreechart-1.0.17.jar"/>
 	<classpathentry kind="output" path="out/production/FrugalLabProject"/>
 </classpath>
