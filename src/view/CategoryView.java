@@ -39,6 +39,7 @@ import javax.swing.table.TableRowSorter;
  */
 public class CategoryView extends javax.swing.JInternalFrame {
 	private CategoryController categoryController = new CategoryController();
+	private int selectedCategoryID;
 	
     /**
      * Creates new form CategoryVieww
@@ -54,6 +55,7 @@ public class CategoryView extends javax.swing.JInternalFrame {
     	//JScrollPane scrollpane = new JScrollPane(jt);
     	//jTable1.setLayout(new BorderLayout());
     	//jTable1.add(scrollpane);
+        selectedCategoryID = 0;
     
     	
 
@@ -186,13 +188,7 @@ public class CategoryView extends javax.swing.JInternalFrame {
         jTextField1.requestFocusInWindow();
         jTextField1.selectAll();
     }                               
-    
 
-
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
     
     public JTable getCategoryListTable(){
     	
@@ -202,8 +198,8 @@ public class CategoryView extends javax.swing.JInternalFrame {
         columnNames.add("Name");
 
         //if (ProjectProperties.isAdminMode) {
-         //   columnNames.add("View/Edit");
             columnNames.add("Delete");
+            columnNames.add("Select");
        // } else {
          //   columnNames.add("View");
       //  }
@@ -216,10 +212,10 @@ public class CategoryView extends javax.swing.JInternalFrame {
   
             final int id = category.getId();
          //   if(CategoryProperties.isAdminMode){
-           //     rowData.add("View/Edit");
                 rowData.add("Delete");
+                rowData.add("Select");
          //   } else {
-           //     rowData.add("View");
+             //   rowData.add("Select");
           //  }
 
             categoryData.add(rowData);
@@ -238,12 +234,34 @@ public class CategoryView extends javax.swing.JInternalFrame {
                 ((DefaultTableModel) table.getModel()).removeRow(modelRow);
             }
         };
+        
+        Action select = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                JTable table = (JTable) e.getSource();
+                int modelRow = Integer.valueOf(e.getActionCommand());
+                Category c = categoryList1.get(modelRow);
+                int id = c.getId(); //((Integer) table.getValueAt(modelRow, 0));
+                System.out.println(c.getId());
+                setSelectedCategoryID(id);
+                //System.out.println("jorge" + table.getValueAt(1, 2));
+                //System.out.println("id ========="+(Integer) table.getValueAt(modelRow, 2));
+                setVisible(true);
+            }
+        };
 
+
+        ButtonColumn selectButtonColumn = new ButtonColumn(categoryTable, select, 2);
         ButtonColumn deleteButtonColumn = new ButtonColumn(categoryTable, delete, 1);
 
         return categoryTable;
     }
-
+    
+    public void setSelectedCategoryID(int selectedCategoryID) {
+        firePropertyChange("selectedParticipantID", this.selectedCategoryID, selectedCategoryID);
+        this.selectedCategoryID = selectedCategoryID;
+        
+    }
+    
     private void KeyPressed(java.awt.event.KeyEvent evt) {                                     
         // TODO add your handling code here:
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
@@ -257,6 +275,8 @@ public class CategoryView extends javax.swing.JInternalFrame {
             jTextField1.selectAll();
         }
     }  
+    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
