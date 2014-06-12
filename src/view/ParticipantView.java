@@ -7,10 +7,12 @@
 package view;
 
 import controller.ParticipantController;
+import controller.ProjectController;
 import controller.ProjectProperties;
 import model.Participant;
 import model.Project;
 import model.Role;
+import service.ProjectService;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,7 +22,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 /**
@@ -38,7 +42,7 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         this.participant = participant;
         controller = new ParticipantController(this);
         initComponents();
-        comboRole.setSelectedIndex(participant != null ? participant.getRole() : -1);
+        comboRole.setSelectedIndex(participant != null ? participant.getRole() - 1 : -1);
     }
 
     public ParticipantView() {
@@ -58,7 +62,6 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         PersistenceUnitEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("PersistenceUnit").createEntityManager();
         roleQuery = java.beans.Beans.isDesignTime() ? null : PersistenceUnitEntityManager.createQuery("SELECT r.name FROM role r");
         roleList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : roleQuery.getResultList();
-        jPanel1 = new javax.swing.JPanel();
         participantPanel = new javax.swing.JPanel();
         lblParticipantFirstName = new javax.swing.JLabel();
         lblParticipantRole = new javax.swing.JLabel();
@@ -75,9 +78,11 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         btnDeleteParticipant = new javax.swing.JButton();
         participantDependencyTab = new javax.swing.JTabbedPane();
         participantProjectPane = new javax.swing.JScrollPane();
-        projectTable = new javax.swing.JTable();
+        projectTable = getProjectTable();
 
         setClosable(true);
+        setResizable(true);
+        setPreferredSize(new java.awt.Dimension(805, 330));
 
         participantPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Participant Details"));
         participantPanel.setName(""); // NOI18N
@@ -142,14 +147,14 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout participantOptionsPanelLayout = new javax.swing.GroupLayout(participantOptionsPanel);
         participantOptionsPanel.setLayout(participantOptionsPanelLayout);
         participantOptionsPanelLayout.setHorizontalGroup(
-                participantOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(participantOptionsPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(participantOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(btnSaveParticipant, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnDeleteParticipant, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
-                                        .addComponent(btnAddProj, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap())
+            participantOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(participantOptionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(participantOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSaveParticipant, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDeleteParticipant, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                    .addComponent(btnAddProj, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         participantOptionsPanelLayout.setVerticalGroup(
             participantOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,112 +171,87 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         javax.swing.GroupLayout participantPanelLayout = new javax.swing.GroupLayout(participantPanel);
         participantPanel.setLayout(participantPanelLayout);
         participantPanelLayout.setHorizontalGroup(
-                participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(participantPanelLayout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(lblParticipantFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(lblParticipantRole, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(lblStartDate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(67, 67, 67)
-                                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtFirstName)
-                                        .addComponent(comboRole, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(txtLastName, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, participantPanelLayout.createSequentialGroup()
-                                                .addComponent(lblPhotoURL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(btnAddImage, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(66, 66, 66)
-                                .addComponent(participantOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(participantPanelLayout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblParticipantFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblParticipantRole, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblStartDate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtFirstName)
+                    .addComponent(comboRole, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtLastName, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, participantPanelLayout.createSequentialGroup()
+                        .addComponent(lblPhotoURL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAddImage, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(participantOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         participantPanelLayout.setVerticalGroup(
-                participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(participantPanelLayout.createSequentialGroup()
-                                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(participantPanelLayout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(lblParticipantFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                        .addGroup(participantPanelLayout.createSequentialGroup()
-                                                .addContainerGap()
-                                                .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblParticipantRole, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(comboRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblPhotoURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnAddImage, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(234, 234, 234))
-                        .addGroup(participantPanelLayout.createSequentialGroup()
-                                .addComponent(participantOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(participantPanelLayout.createSequentialGroup()
+                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(participantPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblParticipantFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(participantPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblParticipantRole, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(participantPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPhotoURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAddImage, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(234, 234, 234))
+            .addGroup(participantPanelLayout.createSequentialGroup()
+                .addComponent(participantOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         participantOptionsPanel.setVisible(ProjectProperties.isAdminMode);
 
-        participantProjectPane.setPreferredSize(new java.awt.Dimension(755, 254));
+        participantDependencyTab.setPreferredSize(new java.awt.Dimension(760, 100));
 
-        projectTable.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String[]{
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
+        participantProjectPane.setPreferredSize(new java.awt.Dimension(755, 100));
+
+        projectTable.setAutoCreateRowSorter(true);
+        projectTable.setModel(projectTable.getModel());
         participantProjectPane.setViewportView(projectTable);
 
         participantDependencyTab.addTab("Projects", participantProjectPane);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(participantPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(participantDependencyTab))
-                .addGap(99, 99, 99))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(participantPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(participantDependencyTab, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
-        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 779, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(participantPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(participantDependencyTab, javax.swing.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(participantPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(participantDependencyTab, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -316,7 +296,7 @@ public class ParticipantView extends javax.swing.JInternalFrame {
             JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Last name required");
             return false;
         }
-        int role = comboRole.getSelectedIndex();
+        int role = roleList.get(comboRole.getSelectedIndex()).getId();
         if (role < 0) {
             return false;
         }
@@ -325,23 +305,28 @@ public class ParticipantView extends javax.swing.JInternalFrame {
     }
 
     private JTable getProjectTable() {
-        Set<Project> projectSet = participant.getProjects();
+        if (participant == null || participant.getProjects() == null) {
+            return new JTable();
+        }
+        final Set<Project> projectSet = participant.getProjects();
         Vector<String> columnNames = new Vector<String>();
+        columnNames.add("ID");
         columnNames.add("Name");
         columnNames.add("City");
         columnNames.add("Country");
         columnNames.add("Start Date");
         columnNames.add("End Date");
+        columnNames.add("View");
         final Vector<Vector> projectData = new Vector<Vector>();
 
         for(final Project project: projectSet){
             Vector<Object> rowData = new Vector<Object>();
+            rowData.add(project.getProjectID());
             rowData.add(project.getProjectName());
             rowData.add(project.getCity());
             rowData.add(project.getCountry());
             rowData.add(project.getStartDate());
             rowData.add(project.getEndDate());
-            final int id = project.getProjectID();
             rowData.add("View");
 
             projectData.add(rowData);
@@ -353,20 +338,21 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         {
             public void actionPerformed(ActionEvent e)
             {
+                ArrayList<Project> projectList = new ArrayList<Project>(projectSet);
                 JTable table = (JTable)e.getSource();
-                int modelRow = Integer.valueOf( e.getActionCommand() );
-                final int id = ((Integer) table.getValueAt(modelRow, 0));
-                viewProject(id);
+                int modelRow = Integer.valueOf(e.getActionCommand());
+                Project p = projectList.get(modelRow);
+                viewProject(p);
             }
         };
 
-        ButtonColumn viewButtonColumn = new ButtonColumn(projectTable, view, 5);
+        ButtonColumn viewButtonColumn = new ButtonColumn(projectTable, view, 6);
 
         return projectTable;
     }
 
-    private void viewProject(int id) {
-        ProjectView pv = new ProjectView(id);
+    private void viewProject(Project p) {
+        ProjectView pv = new ProjectView(p);
         pv.setVisible(true);
         this.getParent().add(pv);
         pv.moveToFront();
@@ -420,7 +406,6 @@ public class ParticipantView extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnDeleteParticipant;
     private javax.swing.JButton btnSaveParticipant;
     private javax.swing.JComboBox comboRole;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblParticipantFirstName;
     private javax.swing.JLabel lblParticipantRole;
     private javax.swing.JLabel lblPhoto;

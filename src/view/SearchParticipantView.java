@@ -71,6 +71,7 @@ public class SearchParticipantView extends JInternalFrame {
         participantTable = getParticipantsTable();
 
         setClosable(true);
+        setResizable(true);
         setPreferredSize(new java.awt.Dimension(725, 343));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Search Participants"));
@@ -107,7 +108,7 @@ public class SearchParticipantView extends JInternalFrame {
                 .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(SearchButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 224, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 248, Short.MAX_VALUE)
                 .addComponent(addButton)
                 .addContainerGap())
         );
@@ -127,6 +128,7 @@ public class SearchParticipantView extends JInternalFrame {
         participantScrollPane.setPreferredSize(new java.awt.Dimension(600, 300));
 
         participantTable.setAutoCreateRowSorter(true);
+        participantTable.setModel(participantTable.getModel());
         participantScrollPane.setViewportView(participantTable);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -135,43 +137,34 @@ public class SearchParticipantView extends JInternalFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(participantScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 649, Short.MAX_VALUE)
-                    .addContainerGap()))
+                .addComponent(participantScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 326, Short.MAX_VALUE)
+            .addGap(0, 163, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(participantScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(participantScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(7, 7, 7)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        setBounds(0, 0, 725, 498);
+        setBounds(0, 0, 725, 325);
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
@@ -248,7 +241,7 @@ public class SearchParticipantView extends JInternalFrame {
             participantData.add(rowData);
         }
 
-        JTable participantTable = new JTable(participantData, columnNames);
+        JTable newTable = new JTable(participantData, columnNames);
 
         Action view = new AbstractAction()
         {
@@ -261,7 +254,7 @@ public class SearchParticipantView extends JInternalFrame {
             }
         };
 
-        ButtonColumn viewButtonColumn = new ButtonColumn(participantTable, view, 5);
+        ButtonColumn viewButtonColumn = new ButtonColumn(newTable, view, 5);
 
         if (ProjectProperties.isAdminMode) {
             Action delete = new AbstractAction() {
@@ -276,7 +269,7 @@ public class SearchParticipantView extends JInternalFrame {
                 }
             };
 
-            ButtonColumn deleteButtonColumn = new ButtonColumn(participantTable, delete, 6);
+            ButtonColumn deleteButtonColumn = new ButtonColumn(newTable, delete, 6);
         }
 
         if (isChooseView()) {
@@ -289,10 +282,10 @@ public class SearchParticipantView extends JInternalFrame {
                 }
             };
 
-            ButtonColumn selectButtonColumn = new ButtonColumn(participantTable, select, 6 + (ProjectProperties.isAdminMode ? 1 : 0));
+            ButtonColumn selectButtonColumn = new ButtonColumn(newTable, select, 6 + (ProjectProperties.isAdminMode ? 1 : 0));
         }
 
-        return participantTable;
+        return newTable;
     }
 
     public void viewParticipant(int id) {
