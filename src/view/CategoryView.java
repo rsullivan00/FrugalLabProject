@@ -248,6 +248,7 @@ public class CategoryView extends javax.swing.JInternalFrame {
                 setVisible(true);
             }
         };
+        
 
 
         ButtonColumn selectButtonColumn = new ButtonColumn(categoryTable, select, 2);
