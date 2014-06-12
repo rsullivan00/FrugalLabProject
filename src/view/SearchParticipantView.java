@@ -185,6 +185,10 @@ public class SearchParticipantView extends JInternalFrame {
         /* Case insensitive regex for strings starting with search string */
         String regex = "(?i)^" + searchTextField.getText();
         TableRowSorter rowSorter = (TableRowSorter) this.participantTable.getRowSorter();
+        if (rowSorter == null) {
+            rowSorter = new TableRowSorter(participantTable.getModel());
+            participantTable.setRowSorter(rowSorter);
+        }
         List<RowFilter<Object, Object>> rfs = new ArrayList<RowFilter<Object, Object>>(participantTable.getColumnCount());
         RowFilter<Object, Object> of;
         try {

@@ -1,6 +1,5 @@
 package controller;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,33 +8,34 @@ import javax.persistence.Persistence;
 
 import model.Category;
 import service.CategoryService;
-import view.CategoryView;
-
 
 
 public class CategoryController {
 	
 	private EntityManagerFactory emf;
 	private EntityManager manager;
-	private CategoryService CategoryService;
+	private CategoryService categoryService;
 	
 	public CategoryController() {
 		this.emf = Persistence.createEntityManagerFactory("PersistenceUnit");;
 		this.manager = emf.createEntityManager();
-		this.CategoryService = new CategoryService(manager);
+		this.categoryService = new CategoryService(manager);
 	}
 
-	
+
+    public void deleteCategory(int id) {
+        categoryService.deleteCategory(id);
+    }
 	
 	public Category addNewCategory(String name){
 		Category Category = new Category();
 		Category.setCategoryName(name);
-		Category C = CategoryService.createCategory(name);
+		Category C = categoryService.createCategory(name);
 		System.out.println(C);
 		return C;
 	}
 	
 	public List<Category> getAllCategoryList(){
-		return CategoryService.readAll();
+		return categoryService.readAll();
 	}
 }
