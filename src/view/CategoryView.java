@@ -46,6 +46,9 @@ public class CategoryView extends javax.swing.JInternalFrame {
     public CategoryView() {
 
         initComponents();
+        jTextField1.setCaretPosition(0);
+        jTextField1.requestFocusInWindow();
+        jTextField1.selectAll();
        
         //jTable1 = getCategoryListTable();
     	//JScrollPane scrollpane = new JScrollPane(jt);
