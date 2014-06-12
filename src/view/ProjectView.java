@@ -222,7 +222,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
         txtAreaOutcome.setRows(5);
         jScrollPane1.setViewportView(txtAreaOutcome);
 
-        btnAddProjPart.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\participant.png"));
+        btnAddProjPart.setIcon(new javax.swing.ImageIcon("images/participant.png"));
         btnAddProjPart.setText("Add Participant");
         btnAddProjPart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -230,7 +230,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
             }
         });
 
-        btnAddProjCat.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\category.png"));
+        btnAddProjCat.setIcon(new javax.swing.ImageIcon("images/category.png"));
         btnAddProjCat.setText("Add Category");
         btnAddProjCat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -238,7 +238,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
             }
         });
 
-        btnAddProjFiles.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\file.png"));
+        btnAddProjFiles.setIcon(new javax.swing.ImageIcon("images/file.png"));
         btnAddProjFiles.setText("Add Files");
         btnAddProjFiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -246,7 +246,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
             }
         });
 
-        btnAddProjHyperlinks.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\hyperlink.png"));
+        btnAddProjHyperlinks.setIcon(new javax.swing.ImageIcon("images/hyperlink.png"));
         btnAddProjHyperlinks.setText("Add Hyperlinks");
         btnAddProjHyperlinks.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,7 +254,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
             }
         });
 
-        btnSaveProject.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\save.png"));
+        btnSaveProject.setIcon(new javax.swing.ImageIcon("images/save.png"));
         btnSaveProject.setText("Save Project");
         btnSaveProject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -270,7 +270,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
             }
         });
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\print.png"));
+        btnPrint.setIcon(new javax.swing.ImageIcon("images/print.png"));
         btnPrint.setText("Print Project Profile");
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -278,7 +278,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
             }
         });
         
-        btnOpenProject.setIcon(new javax.swing.ImageIcon(prop.getAbsolutePath()+"\\images\\open.png"));
+        btnOpenProject.setIcon(new javax.swing.ImageIcon("images/open.png"));
         btnOpenProject.setText("Open Project Folder");
         btnOpenProject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -597,7 +597,8 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
     	showAddHyperlink();
     }                                                    
 
-    private void btnSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void btnSaveProjectActionPerformed(java.awt.event.ActionEvent evt) { 
+    	System.out.println(newParticipantIds.size());
     	if(returnNullIfEmpty(txtProjectName.getText())==null){
     		JOptionPane.showMessageDialog(this, "Enter project name");
     	}else if(returnNullIfEmpty(txtZipCode.getText())!=null){
@@ -638,6 +639,7 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
     		
     	}else{
     		if(txtProjectId.getText().equals("")){
+    			System.out.println("new participant  "+newParticipantIds.size());
 	    		Project project = projectController.addNewProject(txtProjectName.getText(), comboStatus.getSelectedItem().toString(), returnNullIfEmpty(txtAreaOutcome.getText()),returnNullIfEmpty(txtState.getText()), returnNullIfEmpty(txtStreetAddress.getText()), returnNullIfEmpty(txtCity.getText()), returnNullIfEmpty(txtCountry.getText()), returnNullIfEmpty(txtZipCode.getText())==null?null:Integer.parseInt(txtZipCode.getText()), startDate.getDate(), endDate.getDate(),prop.getProjectPath(),projectFiles,newParticipantIds,newCategoryIds);
 	    		createFinalProjectDir(project.getProjectID(), project.getProjectName());
 	    		JOptionPane.showMessageDialog(this, "Project Saved");
@@ -941,8 +943,10 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
     public void propertyChange(PropertyChangeEvent evt) {
         Object source = evt.getSource();
         if (source instanceof SearchParticipantView) {
-            int selectedID = ((SearchParticipantView) source).getSelectedParticipantID();
+            int selectedID = ((Integer) evt.getNewValue());
             /* Add participant with corresponding ID now */
+            System.out.println("selected participant "+selectedID);
+            newParticipantIds.add(selectedID);
         }
     }
     // Variables declaration - do not modify                     

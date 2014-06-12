@@ -85,11 +85,14 @@ public class ProjectController {
 				
 			}
 			Set<Participant> participants = new HashSet<Participant>();
-			/*for(Integer id :participantIds){
+			for(Integer id :participantIds){
+				System.out.println(id);
+			}
+			for(Integer id :participantIds){
 				Participant participant = participantService.readParticipant(id);
 				participants.add(participant);
 				
-			}*/
+			}
 			Set<Category> categories = new HashSet<Category>();
 			/*for(Integer id :categoryIds){
 				Category projFile = categoryService.readCategory(id);

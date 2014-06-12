@@ -71,10 +71,14 @@ public class ProjectService {
 				file.setFilePath(project.getProjectLocation()+"\\" + project.getProjectName()+"_"+project.getProjectID());
 				manager.persist(file);
 			}
+			System.out.println("project id :"+project.getProjectID());
+			HashSet<Participant> participantSet = new HashSet<Participant>();
+			participantSet.addAll(participants);
+			project.setParticipants(participantSet);
+			System.out.println("participant size ======"+participantSet.size());
 			/*for(Participant participant :participants){
-				participant.setProjectID(project.getProjectID());
-				manager.persist(participant);
-			}
+				
+			}/*
 			for(Category category :categories){
 				category.setProjectID(project.getProjectID());
 				manager.persist(category);

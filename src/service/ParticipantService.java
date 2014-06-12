@@ -1,7 +1,9 @@
 package service;
 
 import model.Participant;
+import model.Project;
 import model.Role;
+
 import org.eclipse.persistence.config.CacheUsage;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
@@ -9,6 +11,7 @@ import org.eclipse.persistence.config.QueryHints;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
+
 import java.lang.String;
 import java.util.List;
 
@@ -44,8 +47,15 @@ public class ParticipantService {
     
     // method to read a record
      public Participant readParticipant(int id) {
-    	 Participant participant = manager.find(Participant.class, id);
-    	 return participant;
+    	 try{
+	    	 TypedQuery<Participant> query = manager.createQuery("SELECT p FROM participant p WHERE p.id = :pid",Participant.class);
+	    	 query.setParameter("pid", id); 
+	    	 Participant participant = query.getResultList().get(0);
+	    	 return participant;
+    	 }catch(Exception e){
+    		 
+    	 }
+    	 return null;
      }
 
      // method to read all records

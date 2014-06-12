@@ -282,6 +282,7 @@ public class SearchParticipantView extends JInternalFrame {
                     JTable table = (JTable) e.getSource();
                     int modelRow = Integer.valueOf(e.getActionCommand());
                     setSelectedParticipantID((Integer) table.getValueAt(modelRow, 0));
+                    System.out.println("id ========="+(Integer) table.getValueAt(modelRow, 0));
                     setVisible(false);
                 }
             };
