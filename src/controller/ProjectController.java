@@ -48,8 +48,7 @@ public class ProjectController {
 		this.fileService = new FileService(manager);
 		this.desktop = dp;
 	}
-	
-	
+
 	public Project addNewProject(String name,String status,String outcome,String state,String streetAddress,String city,String country,Integer zipCode,Date startDate,Date endDate,String dirPath,Set<String> fileNames,Set<Integer> participantIds,Set<Integer> categoryIds){
 		try{
 			Project project = new Project();
@@ -151,15 +150,12 @@ public class ProjectController {
 		
 		Set<Participant> dParticipants = new HashSet<Participant>();
 		Set<Participant> newParticipants = new HashSet<Participant>();
-		/*for(Integer id :deletedParticipantIds){
-			Participant participant = participantService.readParticipant(id);
-			participants.add(participant);
-		}
-		
+
 		for(Integer id :newParticipantIds){
 			Participant participant = participantService.readParticipant(id);
 			newParticipants.add(participant);
-		}*/
+		}
+
 		Set<Category> dCategories = new HashSet<Category>();
 		Set<Category> newCategory = new HashSet<Category>();
 		/*for(Integer id :deletedCategoryIds){

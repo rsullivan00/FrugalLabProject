@@ -22,7 +22,6 @@ public class CategoryController {
 		this.categoryService = new CategoryService(manager);
 	}
 
-
     public void deleteCategory(int id) {
         categoryService.deleteCategory(id);
     }

@@ -25,8 +25,10 @@ import java.util.List;
  */
 public class ParticipantService {
 	private EntityManager manager;
+    private RoleService roleService;
 
 	public ParticipantService(EntityManager manager) {
+        this.roleService = new RoleService(manager);
 		 this.manager = manager;
 	}
 	 
@@ -51,6 +53,10 @@ public class ParticipantService {
 	    	 TypedQuery<Participant> query = manager.createQuery("SELECT p FROM participant p WHERE p.id = :pid",Participant.class);
 	    	 query.setParameter("pid", id); 
 	    	 Participant participant = query.getResultList().get(0);
+             Role r = roleService.readRole(participant.getRole());
+             if (r != null) {
+                 participant.setRoleName(r.getName());
+             }
 	    	 return participant;
     	 }catch(Exception e){
     		 
@@ -63,6 +69,12 @@ public class ParticipantService {
          /* Query while ignoring cache to always get new data */
     	 TypedQuery<Participant> query = manager.createQuery("SELECT e FROM participant e", Participant.class).setHint(QueryHints.REFRESH, HintValues.TRUE);
     	 List<Participant> result =  query.getResultList();
+         for (Participant p: result) {
+             Role r = roleService.readRole(p.getRole());
+             if (r != null) {
+                 p.setRoleName(r.getName());
+             }
+         }
 
     	 return result;   	 
      }

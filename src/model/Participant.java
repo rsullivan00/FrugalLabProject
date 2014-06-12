@@ -37,6 +37,9 @@ public class Participant implements Serializable {
     @ManyToMany(cascade=CascadeType.ALL, mappedBy="participants")
     private Set<Project> projects;
 
+    @Transient
+    private String roleName;
+
     public Set<Project> getProjects() {
         return projects;
     }
@@ -143,6 +146,14 @@ public class Participant implements Serializable {
 
     public void setPhotoURL(String photoURL) {
         this.photoURL = photoURL;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }
 

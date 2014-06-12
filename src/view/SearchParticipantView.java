@@ -226,13 +226,12 @@ public class SearchParticipantView extends JInternalFrame {
         }
         final Vector<Vector> participantData = new Vector<Vector>();
 
-        List<Role> roleList = new RoleController().getAllRoles();
         for(final Participant participant: participantList){
             Vector<Object> rowData = new Vector<Object>();
             rowData.add(participant.getId());
             rowData.add(participant.getFirstName());
             rowData.add(participant.getLastName());
-            rowData.add(roleList.get(participant.getRole()).getName());
+            rowData.add(participant.getRoleName());
             rowData.add(participant.getPhotoURL());
             final int id = participant.getId();
             if(ProjectProperties.isAdminMode){
@@ -286,7 +285,6 @@ public class SearchParticipantView extends JInternalFrame {
                     JTable table = (JTable) e.getSource();
                     int modelRow = Integer.valueOf(e.getActionCommand());
                     setSelectedParticipantID((Integer) table.getValueAt(modelRow, 0));
-                    System.out.println("id ========="+(Integer) table.getValueAt(modelRow, 0));
                     setVisible(false);
                 }
             };
