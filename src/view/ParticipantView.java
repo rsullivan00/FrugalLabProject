@@ -272,6 +272,8 @@ public class ParticipantView extends javax.swing.JInternalFrame {
     private void btnDeleteParticipantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteParticipantActionPerformed
         controller.deleteParticipant(participant.getId());
         tryToUpdateSearchPViews();
+        setVisible(false);
+        this.getParent().remove(this);
     }//GEN-LAST:event_btnDeleteParticipantActionPerformed
 
     private void btnSaveParticipantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveParticipantActionPerformed
@@ -288,6 +290,8 @@ public class ParticipantView extends javax.swing.JInternalFrame {
             controller.editParticipant(participant.getId(), firstName, lastName, role, photoURL);
         }
         tryToUpdateSearchPViews();
+        setVisible(false);
+        this.getParent().remove(this);
     }//GEN-LAST:event_btnSaveParticipantActionPerformed
 
     private boolean validateFields() {
