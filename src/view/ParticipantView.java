@@ -7,12 +7,10 @@
 package view;
 
 import controller.ParticipantController;
-import controller.ProjectController;
 import controller.ProjectProperties;
 import model.Participant;
 import model.Project;
 import model.Role;
-import service.ProjectService;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,8 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 /**
  *
@@ -43,6 +41,7 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         controller = new ParticipantController(this);
         initComponents();
         comboRole.setSelectedIndex(participant != null ? participant.getRole() - 1 : -1);
+        btnAddProj.setVisible(false);
     }
 
     public ParticipantView() {
@@ -57,10 +56,9 @@ public class ParticipantView extends javax.swing.JInternalFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         PersistenceUnitEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("PersistenceUnit").createEntityManager();
-        roleQuery = java.beans.Beans.isDesignTime() ? null : PersistenceUnitEntityManager.createQuery("SELECT r.name FROM role r");
+        roleQuery = java.beans.Beans.isDesignTime() ? null : PersistenceUnitEntityManager.createQuery("SELECT r FROM role r");
         roleList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : roleQuery.getResultList();
         participantPanel = new javax.swing.JPanel();
         lblParticipantFirstName = new javax.swing.JLabel();
@@ -99,9 +97,14 @@ public class ParticipantView extends javax.swing.JInternalFrame {
 
         txtLastName.setText(participant != null ? participant.getLastName() : null);
 
-        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, roleList, comboRole);
-        bindingGroup.addBinding(jComboBoxBinding);
-
+        final Vector<String> roleNames = new Vector<String>();
+        roleList.forEach(new Consumer<Role>() {
+            @Override
+            public void accept(Role role) {
+                roleNames.add(role.getName());
+            }
+        });
+        comboRole.setModel(new DefaultComboBoxModel<String>(roleNames));
         comboRole.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboRoleActionPerformed(evt);
@@ -254,8 +257,6 @@ public class ParticipantView extends javax.swing.JInternalFrame {
                 .addComponent(participantDependencyTab, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE))
         );
 
-        bindingGroup.bind();
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -296,7 +297,8 @@ public class ParticipantView extends javax.swing.JInternalFrame {
             JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Last name required");
             return false;
         }
-        int role = roleList.get(comboRole.getSelectedIndex()).getId();
+        Role r = roleList.get(comboRole.getSelectedIndex());
+        int role = r.getId();
         if (role < 0) {
             return false;
         }
@@ -420,6 +422,5 @@ public class ParticipantView extends javax.swing.JInternalFrame {
     private javax.persistence.Query roleQuery;
     private javax.swing.JTextField txtFirstName;
     private javax.swing.JTextField txtLastName;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

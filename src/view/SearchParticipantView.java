@@ -7,18 +7,16 @@
 package view;
 
 import controller.ProjectProperties;
-import controller.RoleController;
 import controller.SearchParticipantController;
 import model.Participant;
-import model.Role;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 /**
  *

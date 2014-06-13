@@ -92,9 +92,6 @@ public class ProjectView extends javax.swing.JInternalFrame implements Printable
         btnOpenProject.setVisible(false);
     }
 
-    public ProjectView(int id) {
-    }
-    
     public ProjectView(Project project) {
         initComponents();
         this.project = project;

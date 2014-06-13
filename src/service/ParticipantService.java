@@ -1,18 +1,13 @@
 package service;
 
 import model.Participant;
-import model.Project;
 import model.Role;
-
-import org.eclipse.persistence.config.CacheUsage;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
-
-import java.lang.String;
 import java.util.List;
 
 /**

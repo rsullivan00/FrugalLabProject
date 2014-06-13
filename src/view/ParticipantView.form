@@ -9,7 +9,7 @@
     </Component>
     <Component class="javax.persistence.Query" name="roleQuery">
       <Properties>
-        <Property name="query" type="java.lang.String" value="SELECT r.name FROM role r"/>
+        <Property name="query" type="java.lang.String" value="SELECT r FROM role r"/>
         <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
           <ComponentRef name="PersistenceUnitEntityManager"/>
         </Property>
@@ -187,12 +187,17 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="comboRole">
-          <BindingProperties>
-            <BindingProperty name="elements" source="roleList" target="comboRole" targetPath="elements" updateStrategy="0" immediately="false"/>
-          </BindingProperties>
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new DefaultComboBoxModel&lt;String&gt;(roleNames)" type="code"/>
+            </Property>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboRoleActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="final Vector&lt;String&gt; roleNames = new Vector&lt;String&gt;();&#xa;        roleList.forEach(new Consumer&lt;Role&gt;() {&#xa;            @Override&#xa;            public void accept(Role role) {&#xa;                roleNames.add(role.getName());&#xa;            }&#xa;        });"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnAddImage">
           <Properties>
