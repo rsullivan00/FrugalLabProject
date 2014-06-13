@@ -14,7 +14,11 @@ import javax.swing.event.TableModelListener;
 import java.util.List;
 
 /**
- * Created by Rick on 5/30/2014.
+ *  ParticipantController.java
+ *  Created by Rick Sullivan on 5/27/2014.
+ *
+ *  The ParticipantController queries the ParticipantService to manage an individual Participant.
+ *
  */
 public class ParticipantController {
     private ParticipantView view;

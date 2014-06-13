@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * service.ParticipantService.java
  * Created by Rick Sullivan on 5/27/2014.
- * COEN 160 Labs 7 and 8
  *
  * The service.ParticipantService manages changes to the participant table using the JPA.
  * Modified from R. Grover's CourseListService.

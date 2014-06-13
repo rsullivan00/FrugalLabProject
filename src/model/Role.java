@@ -5,7 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- * Created by Rick on 5/30/2014.
+ * model.Role.java
+ * Created by Rick Sullivan on 5/30/2014.
+ *
+ * Entity class for roles of participant.
+ * Corresponds to the role table
  */
 @Entity(name = "role")
 public class Role {

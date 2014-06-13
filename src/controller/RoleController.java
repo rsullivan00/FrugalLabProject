@@ -9,7 +9,11 @@ import javax.persistence.Persistence;
 import java.util.List;
 
 /**
- * Created by Rick on 6/9/2014.
+ *  RoleController.java
+ *  Created by Rick Sullivan on 5/27/2014.
+ *
+ *  The RoleController queries the RoleService for elements in the role table.
+ *
  */
 public class RoleController {
  	private EntityManagerFactory entityManagerFactory;

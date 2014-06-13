@@ -26,8 +26,10 @@ import java.util.Vector;
 import java.util.function.Consumer;
 
 /**
+ *  ParticipantView.java
+ *  Created by Rick Sullivan on 5/27/2014.
  *
- * @author Rick
+ *  The ParticipantView shows and allows editing of a single Participant.
  */
 public class ParticipantView extends javax.swing.JInternalFrame {
     private ParticipantController controller;
@@ -98,12 +100,10 @@ public class ParticipantView extends javax.swing.JInternalFrame {
         txtLastName.setText(participant != null ? participant.getLastName() : null);
 
         final Vector<String> roleNames = new Vector<String>();
-        roleList.forEach(new Consumer<Role>() {
-            @Override
-            public void accept(Role role) {
+        for (Role role : roleList) {
                 roleNames.add(role.getName());
-            }
-        });
+        }
+
         comboRole.setModel(new DefaultComboBoxModel<String>(roleNames));
         comboRole.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -399,7 +399,6 @@ public class ParticipantView extends javax.swing.JInternalFrame {
     private void btnAddProjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjActionPerformed
 
     }//GEN-LAST:event_btnAddProjActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.persistence.EntityManager PersistenceUnitEntityManager;

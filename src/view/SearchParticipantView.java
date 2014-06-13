@@ -18,9 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+
 /**
+ *  SearchParticipantView.java
+ *  Created by Rick Sullivan on 5/27/2014.
  *
- * @author Rick
+ *  The SearchParticipantView shows all participants stored. It also connects to the
+ *  ParticipantView to allow editing of the participants.
+ *
  */
 public class SearchParticipantView extends JInternalFrame {
     private SearchParticipantController controller;

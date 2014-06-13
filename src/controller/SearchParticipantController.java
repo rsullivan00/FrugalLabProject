@@ -13,7 +13,11 @@ import javax.swing.event.TableModelListener;
 import java.util.List;
 
 /**
- * Created by Rick on 6/8/2014.
+ *  SearchParticipantController.java
+ *  Created by Rick Sullivan on 5/27/2014.
+ *
+ *  The SearchParticipantController queries the ParticipantService to manage all Participants.
+ *
  */
 public class SearchParticipantController {
     private SearchParticipantView view;

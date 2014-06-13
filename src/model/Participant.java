@@ -5,15 +5,12 @@ import javax.persistence.*;
 import java.io.*;
 import java.util.Set;
 
-
 /**
- * Model.Participant.java
+ * model.Participant.java
  * Created by Rick Sullivan on 5/27/2014.
- * COEN 160 Labs 7 and 8
  *
  * Entity class for participants in projects.
  * Corresponds to the participant table
- * Modified from R. Grover's CourseList.
  */
 @Entity(name = "participant")
 public class Participant implements Serializable {
@@ -40,17 +37,9 @@ public class Participant implements Serializable {
     @Transient
     private String roleName;
 
-    public Set<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(Set<Project> projects) {
-        this.projects = projects;
-    }
-
     // return number of columns in the table
     public int getNumberOfColumns() {
-        return 4;
+        return 5;
     }
 
     // return the data in column i
@@ -63,6 +52,8 @@ public class Participant implements Serializable {
             return getLastName();
         else if (i == 3)
             return Integer.toString(getRole());
+        else if (i == 4)
+            return getPhotoURL();
         else
             throw new Exception("Error: invalid column index in participants table");
     }
@@ -78,6 +69,8 @@ public class Participant implements Serializable {
             colName = "last_name";
         else if (i == 3)
             colName = "role";
+        else if (i == 4)
+            colName = "participant_photo_url";
         else
             throw new Exception("Access to invalid column number in participants table");
 
@@ -94,6 +87,8 @@ public class Participant implements Serializable {
             lastName =  (String) value;
         else if (i == 3)
             role = Integer.parseInt((String) value);
+        else if (i == 4)
+            photoURL = (String) value;
         else
             throw new Exception("Error: invalid column index in participants table");
     }
@@ -146,6 +141,14 @@ public class Participant implements Serializable {
 
     public void setPhotoURL(String photoURL) {
         this.photoURL = photoURL;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
     }
 
     public String getRoleName() {

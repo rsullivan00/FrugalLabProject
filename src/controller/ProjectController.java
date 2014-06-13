@@ -111,9 +111,11 @@ public class ProjectController {
 		Project project = manager.find(Project.class, projectId);
 		project.setProjectName(name);
 		project.setStatus(status);
+
 		if(startDate!=null){
 			project.setStartDate(new java.sql.Date(startDate.getTime()));
 		}
+
 		if(endDate!=null){
 			project.setEndDate(new java.sql.Date(endDate.getTime()));
 		}
